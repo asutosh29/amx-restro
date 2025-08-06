@@ -1,0 +1,9 @@
+{{ define "Message" }}
+{{ if or .message .category }}
+
+<div class="alert alert-{{ .category}}" role="alert">
+    {{ .message }}
+</div>
+{{end}}
+
+{{ end }}
