@@ -142,3 +142,13 @@ func HandleLoginUser(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/home", http.StatusSeeOther)
 
 }
+
+func HandleLogOut(w http.ResponseWriter, r *http.Request) {
+	http.SetCookie(w, &http.Cookie{
+		Name:   "token",
+		Value:  " ",
+		MaxAge: -1,
+	})
+
+	http.Redirect(w, r, "/login", http.StatusSeeOther)
+}
