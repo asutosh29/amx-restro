@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {{ template "Head" .}}
+    <title>Restro | Menu</title>
+    <style>
+        #bottom {
+            display: none;
+        }
+
+        #menu-container,
+        #cart-container {
+            height: calc(100vh - 12rem);
+        }
+
+        #cart_items {
+            height: calc(100vh - 24rem);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- MODAL -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Confirmations</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Please confirm your order before placing it</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="checkout2">Place Order</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{ template "Navbar" . }}
+    {{ template "Categories" . }}
+
+    <div id="menuMain" class=" container d-flex mt-6 vw-100">
+        <div class="container Menu w-75">
+            <h1>Menu</h1>
+            <div id="menu-container"
+                class="d-flex justify-content-center flex-row gap-2 p-3 box-shadow overflow-y-scroll">
+                <div id="menu" class="menu-card-container d-flex flex-wrap justify-content-center gap-2">
+                    <!-- Insert Items one by one -->
+                </div>
+            </div>
+        </div>
+        <div id="cart" class="w-25">
+            <h1>Cart</h1>
+            <div id="cart-container" class="p-2 box-shadow">
+                <div id="cart_items" class="box-shadow overflow-y-scroll">
+                </div>
+                <div id="bottom" class="d-flex flex-column gap-2 p-4">
+                    <label for="instruction" class="form-label">Any Specific instructions?</label>
+                    <textarea name="instruction" class="form-control"
+                        id="instruction">No special instructions</textarea>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" id="checkout"
+                        data-bs-target="#exampleModal">
+                        Checkout!
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{ template "Bootstrap" . }}
+
+    <script>
+
+        const rights = Array(...document.getElementsByClassName('rights'))
+        const lefts = Array(...document.getElementsByClassName('lefts'))
+        const checkoutBtn = document.getElementById('checkout')
+        const bottom = document.getElementById('bottom')
+        const instruction = document.getElementById('instruction')
+        const cartLocal = localStorage.cart
+        if (!cartLocal) {
+            localStorage.setItem('cart', JSON.stringify([]))
+        }
+        let cart = JSON.parse(localStorage.cart)
+        const instructLocal = localStorage.instruct
+        if (!instructLocal) {
+            localStorage.setItem('instruct', JSON.stringify(""))
+        }
+        let instruct = JSON.parse(localStorage.instruct)
+
+
+        window.onload = (event) => {
+
+            init()
+        };
+        function init() {
+            // Get cards by ID and update their quantities as present in the local storage
+            cart.forEach(e => {
+                const qty = document.getElementById(`qty-${e.id}`)
+
+
+                if (!qty) {
+                    return
+                }
+                // let qtyInt = parseInt(qty.innerText)
+                const qtyInt = (cart.find(elem => elem.id === e.id)).qty
+                qty.innerText = qtyInt
+
+            });
+            instruction.innerText = instruct
+            renderCart()
+
+        }
+
+
+
+        function getCartCardData(id) {
+            const card = document.getElementById(`item-${id}`);
+
+            if (!card) {
+                console.warn(`No card`);
+                return
+            }
+
+            const img = card.querySelector('img.card-img-top');
+            const img_url = img?.getAttribute('src') || '';
+
+            const titleEl = card.querySelector('.card-title');
+            const item_name = titleEl?.textContent?.trim() || '';
+            const isVeg = item_name.includes('🟢');
+
+            const descEl = card.querySelector('.card-text');
+            const item_description = descEl?.textContent?.trim() || '';
+
+            const priceEl = card.querySelector('.list-group-item');
+            let price = priceEl.textContent
+
+            const qtyEl = card.querySelector(`#qty-${id}`);
+            const quantity = qtyEl ? parseInt(qtyEl.textContent, 10) || 0 : 0;
+            const itemInList = cart.find(item => item.id === id)
+            const payload = {
+                item_id: String(id),
+                item_name,
+                isVeg,
+                item_description,
+                price,
+                img_url,
+                qty: quantity
+                // qty: itemInList.qty
+            };
+            return payload
+        }
+        function createCartCard(id) {
+            const itemObj = cart.find(e => e.id === id)
+            const item = itemObj?.info
+            const qty = itemObj.qty
+            if (!item) {
+                console.error("No data found")
+                return
+            }
+
+
+            // card container
+            const card = document.createElement('div');
+            card.classList.add('card', 'm-3', 'd-flex', 'flex-row');
+            card.style.width = '18rem';
+            card.id = `item-${item.item_id}`;
+
+            // body
+            const body = document.createElement('div');
+            body.classList.add('card-body');
+
+            const title = document.createElement('h5');
+            title.classList.add('card-title');
+            title.textContent = item.item_name;
+            body.appendChild(title);
+
+            const desc = document.createElement('p');
+            desc.classList.add('card-text');
+            desc.textContent = item.item_description;
+            body.appendChild(desc);
+
+
+            card.appendChild(body);
+
+            // Price list
+            const ul = document.createElement('ul');
+            ul.classList.add('list-group', 'list-group-flush', 'd-flex', 'align-items-center', 'justify-content-center');
+            const li = document.createElement('li');
+            li.classList.add('list-group-item');
+            li.textContent = item.price;
+            ul.appendChild(li);
+
+
+            card.appendChild(ul);
+
+            // btn group
+            const btnGroup = document.createElement('div');
+            btnGroup.classList.add('btn-group');
+            const qtySpan = document.createElement('span');
+            qtySpan.id = `qty-cart-${item.item_id}`;
+            qtySpan.classList.add(
+                'd-flex', 'align-items-center', 'justify-content-center', 'ps-4', 'pe-4'
+            );
+            qtySpan.textContent = `Qty: ${qty}`;
+            btnGroup.appendChild(qtySpan);
+
+
+            card.appendChild(btnGroup);
+
+            return card;
+        }
+
+        // Rendering
+        function renderCart() {
+            if (cart.length === 0) {
+                // checkoutBtn.style.display = 'none'
+                bottom.style.display = 'none'
+            }
+            else {
+                // checkoutBtn.style.display = 'block'
+                bottom.style.display = 'block'
+            }
+            const cartDiv = document.getElementById('cart_items')
+            cartDiv.innerText = ''
+            cart.forEach(item => {
+                const cardItem = createCartCard(item.id)
+                if (!cardItem) {
+                    return
+                }
+                cartDiv.appendChild(cardItem)
+            });
+        }
+
+        // Utils
+        function addToCart(id) {
+            const card = document.getElementById(`item-${id}`)
+            const qty = document.getElementById(`qty-${id}`)
+            let qtyInt = parseInt(qty.innerText)
+            const item = cart.find(item => item.id === id)
+            if (qtyInt + 1 <= 5) {
+                qtyInt += 1;
+                if (item) {
+                    item.qty = qtyInt
+                } else {
+                    cart.push({ id: id, qty: qtyInt })
+                }
+            } else {
+                qtyInt = item.qty
+            }
+            qty.innerText = qtyInt
+        }
+        function removeFromCart(id) {
+            const card = document.getElementById(`item-${id}`)
+            const qty = document.getElementById(`qty-${id}`)
+            let qtyInt = parseInt(qty.innerText)
+            const item = cart.find(item => item.id === id)
+            if (qtyInt - 1 >= 0) {
+                qtyInt -= 1;
+                if (item) {
+                    item.qty = qtyInt
+                } else {
+                    cart.push({ id: id, qty: qtyInt })
+                }
+                if (item.qty === 0) {
+                    cart = cart.filter(e => e.id !== item.id)
+                }
+            }
+            qty.innerText = qtyInt
+        }
+
+        function addToCartNew(id) {
+            const card = document.getElementById(`item-${id}`)
+            const qty = document.getElementById(`qty-${id}`)
+            let qtyInt = parseInt(qty.innerText)
+            const item = cart.find(item => item.id === id)
+            if (qtyInt + 1 <= 5) {
+                qtyInt += 1;
+                if (item) {
+                    item.qty = qtyInt
+                } else {
+                    cart.push({ id: id, qty: qtyInt, info: getCartCardData(id) })
+                }
+            } else {
+                qtyInt = item.qty
+            }
+            qty.innerText = qtyInt
+
+            localStorage.setItem('cart', JSON.stringify(cart))
+        }
+        function removeFromCartNew(id) {
+            const card = document.getElementById(`item-${id}`)
+            const qty = document.getElementById(`qty-${id}`)
+            let qtyInt = parseInt(qty.innerText)
+            const item = cart.find(item => item.id === id)
+            if (qtyInt - 1 >= 0) {
+                qtyInt -= 1;
+                if (item) {
+                    item.qty = qtyInt
+                } else {
+                    cart.push({ id: id, qty: qtyInt, info: getCartCardData(id) })
+                }
+                if (item.qty === 0) {
+                    cart = cart.filter(e => e.id !== item.id)
+                }
+            }
+            qty.innerText = qtyInt
+            localStorage.setItem('cart', JSON.stringify(cart))
+        }
+
+        rights.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                addToCartNew(e.target.id)
+                renderCart()
+
+            })
+        });
+        lefts.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                removeFromCartNew(e.target.id)
+                renderCart()
+            })
+        });
+
+        // SUbmit
+        const checkoutBtn2 = document.getElementById('checkout2')
+        checkoutBtn2.addEventListener('click', (e) => {
+            const instructions = instruction.value
+            const data = { instructions, cart }
+
+            fetch('/order', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+                .then(response => response.json())
+                .then((response) => {
+                    cart = []
+                    localStorage.setItem('cart', JSON.stringify(cart))
+                    instruct = ""
+                    localStorage.setItem('instruct', JSON.stringify(instruct))
+
+                    window.location.href = response.url;
+                })
+        })
+
+        // Instructions
+        instruction.addEventListener('focusout', (e) => {
+            const instructions = instruction.value
+            instruct = instructions
+            localStorage.setItem('instruct', JSON.stringify(instruct))
+
+        })
+
+
+    </script>
+</body>
+
+</html>

@@ -1,11 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {{ template "Head" .}}
     <title>Restro | Home</title>
 </head>
+
 <body>
-    <h1>This is home page!</h1>
+    {{ template "Navbar" . }}
+    <div class="container mt-6 box-shadow">
+        <h1>Home page</h1>
+        <ol>
+            <li>Go to Menu</li>
+            <li>Choose Your items</li>
+            <li>Add any instructions if u want</li>
+            <li>Click on checkout</li>
+            <li>Mark your orderId and tableId</li>
+            <li>Ask Admin for Bill</li>
+        </ol>
+
+    </div>
+
 </body>
+
 </html>
