@@ -49,7 +49,9 @@
             <div id="menu-container"
                 class="d-flex justify-content-center flex-row gap-2 p-3 box-shadow overflow-y-scroll">
                 <div id="menu" class="menu-card-container d-flex flex-wrap justify-content-center gap-2">
-                    <!-- Insert Items one by one -->
+                    {{ range .Items}}
+                    {{ template "MenuCard" .}}
+                    {{end}}
                 </div>
             </div>
         </div>

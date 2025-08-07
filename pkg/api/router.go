@@ -14,12 +14,17 @@ func Start() {
 
 	//Adding static files
 	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./static/"))))
+	r.StrictSlash(true)
 	r.Use(middlewares.LogRequests)
 	r.Use(middlewares.LoggedIn)
 
 	// Static Routes
 	StaticRouter := r.PathPrefix("/").Subrouter()
 	routers.RegisterStaticRouter(StaticRouter)
+
+	// Menu route
+	MenuRouter := r.PathPrefix("/menu").Subrouter()
+	routers.RegisterMenuRouter(MenuRouter)
 
 	// Auth Routes
 	AuthRouter := r.PathPrefix("/").Subrouter()
