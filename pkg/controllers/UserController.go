@@ -139,6 +139,6 @@ func HandleLoginUser(w http.ResponseWriter, r *http.Request) {
 	})
 
 	// Redirect to Home page
-	RenderHome(w, r)
+	http.Redirect(w, r, "/home", http.StatusSeeOther)
 
 }
