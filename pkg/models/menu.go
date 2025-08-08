@@ -98,7 +98,6 @@ WHERE category_name= ? `, category_name)
 			fmt.Println(err)
 			return []Item{}, err
 		}
-
 		ItemList = append(ItemList, temp)
 	}
 

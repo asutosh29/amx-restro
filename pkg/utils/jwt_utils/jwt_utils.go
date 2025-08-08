@@ -10,7 +10,7 @@ import (
 var jwtKey = []byte(os.Getenv("JWT_SECRET"))
 
 type Claims struct {
-	types.User
+	User types.User
 	jwt.StandardClaims
 }
 

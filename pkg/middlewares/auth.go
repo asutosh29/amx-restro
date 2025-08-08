@@ -1,6 +1,7 @@
 package middlewares
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 
@@ -26,13 +27,17 @@ func LoggedIn(next http.Handler) http.Handler {
 		}
 
 		jwt_token := cookie_jwt.Value
-		_, err = jwt_utils.ValidateJWT(jwt_token)
+		claims, err := jwt_utils.ValidateJWT(jwt_token)
 		if err != nil {
 			fmt.Println("Error validating JWT")
 			next.ServeHTTP(w, r)
 		}
 
 		// TODO: Store User in context for Frontend
+		ctx := context.WithValue(r.Context(), "User", claims.User)
+		// ctx = context.WithValue(ctx, "key", value)
+		r = r.WithContext(ctx)
+
 		next.ServeHTTP(w, r)
 	})
 }

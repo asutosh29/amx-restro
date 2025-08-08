@@ -6,6 +6,6 @@ import (
 )
 
 func RegisterMenuRouter(MenuRouter *mux.Router) {
-	MenuRouter.HandleFunc("/", controllers.RenderMenu).Methods("GET")
+	MenuRouter.HandleFunc("", controllers.RenderMenu).Methods("GET")
 
 }

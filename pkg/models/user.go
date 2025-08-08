@@ -58,3 +58,14 @@ func GetUser(user types.User) (types.User, error) {
 	}
 	return DbUser, nil
 }
+
+func GertUserId(user types.User) (int, error) {
+	var UserId int
+	err := DB.QueryRow("select id  from users where email= ? ", user.Email).Scan(&UserId)
+	print()
+	if err != nil {
+		return -1, err
+
+	}
+	return UserId, nil
+}

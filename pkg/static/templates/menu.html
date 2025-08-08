@@ -332,7 +332,8 @@
         checkoutBtn2.addEventListener('click', (e) => {
             const instructions = instruction.value
             const data = { instructions, cart }
-
+            console.log("Requesy JSON Body: ", data)
+            console.log("Requesy JSON Body: ", JSON.stringify(data))
             fetch('/order', {
                 method: 'POST',
                 headers: {
