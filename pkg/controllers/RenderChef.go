@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-func RenderHome(w http.ResponseWriter, r *http.Request) {
+func RenderChef(w http.ResponseWriter, r *http.Request) {
 
 	data := make(map[string]interface{})
 
@@ -13,7 +13,7 @@ func RenderHome(w http.ResponseWriter, r *http.Request) {
 	data["User"] = User
 
 	templFiles := []string{
-		"pkg/static/templates/home.html",
+		"pkg/static/templates/chef.html",
 		"pkg/static/templates/partials/head.html",
 		"pkg/static/templates/partials/message.html",
 		"pkg/static/templates/partials/bootstrap.html",

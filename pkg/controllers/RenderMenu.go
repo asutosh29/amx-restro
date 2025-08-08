@@ -13,14 +13,11 @@ func RenderMenu(w http.ResponseWriter, r *http.Request) {
 	// Get Categories
 	CategoryList, _ := models.GetAllCategories()
 	CategoryList = append([]string{"All"}, CategoryList...)
-	fmt.Println("Category list: ", CategoryList)
 
 	query_paramas := r.URL.Query()
 
 	category_query := query_paramas.Get("category")
 	search_query := query_paramas.Get("search")
-	fmt.Println("search query", search_query)
-	fmt.Println("category query", category_query)
 
 	var items []models.Item
 

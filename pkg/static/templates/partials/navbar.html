@@ -18,7 +18,11 @@
                         {{ .User.Username }}
                     </a>
                     <ul class="dropdown-menu z-3">
-                        <!-- Admin routes -->
+                        {{ if or (eq .User.Userole "admin") (eq .User.Userole "super")}}
+                        <li><a class="dropdown-item" href="/admin">Admin Page</a></li>
+                        <li><a class="dropdown-item" href="/admin/chef">Chef</a></li>
+                        <li><a class="dropdown-item" href="/admin/orders">All Orders</a></li>
+                        {{end}}
                         <li><a class="dropdown-item" href="/profile">Profile</a></li>
                         <li><a class="dropdown-item" href="/user/orders">Orders</a></li>
                         <li>

@@ -22,13 +22,17 @@ func Start() {
 	StaticRouter := r.PathPrefix("/").Subrouter()
 	routers.RegisterStaticRouter(StaticRouter)
 
-	// Menu route
+	// Menu router
 	MenuRouter := r.PathPrefix("/menu").Subrouter()
 	routers.RegisterMenuRouter(MenuRouter)
 
-	// Menu route
+	// Order router
 	OrderRouter := r.PathPrefix("/order").Subrouter()
 	routers.RegisterOrderRouter(OrderRouter)
+
+	// Admin router
+	AdminRouter := r.PathPrefix("/admin").Subrouter()
+	routers.RegisterAdminRouter(AdminRouter)
 
 	// Auth Routes
 	AuthRouter := r.PathPrefix("/").Subrouter()

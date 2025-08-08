@@ -28,10 +28,25 @@ type ItemInfo struct {
 	IsVeg           bool
 	ItemDescription string
 	ItemID          int
+	CategoryID      int
 	ItemName        string
 	Price           float32
 	Qty             int
+	IsAvailable     int
 }
+
+type OrderItem struct {
+	OrderID            int
+	Order_status       string
+	CustomerID         int
+	TableID            int
+	Extra_instructions string
+	Total_amount       float32
+	Order_at_time      string
+	ItemInfo
+}
+
+//
 
 type Order_table_id struct {
 	OrderID int

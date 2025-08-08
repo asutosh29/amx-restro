@@ -14,7 +14,6 @@ func RenderPayment(w http.ResponseWriter, r *http.Request) {
 
 	User := r.Context().Value("User")
 	data["User"] = User
-	fmt.Println("User :", User)
 
 	// orderID := r.Context().Value("orderID")
 	// tableID := r.Context().Value("tableID")
@@ -23,7 +22,14 @@ func RenderPayment(w http.ResponseWriter, r *http.Request) {
 	orderID, _ := session.Values["orderID"].(int)
 	tableID, _ := session.Values["tableID"].(int)
 
-	fmt.Println(orderID, tableID)
+	session.Values["orderID"] = -1
+	session.Values["tableID"] = -1
+
+	if orderID == -1 || tableID == -1 {
+		fmt.Println("Bro pehle khaana order kro!")
+		http.Redirect(w, r, "/menu", http.StatusSeeOther)
+	}
+
 	data["OrderID"] = orderID
 	data["TableID"] = tableID
 

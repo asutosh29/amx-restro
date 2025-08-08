@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {{ template "Head" .}}
+        <title>Restro | Admin</title>
+</head>
+
+<body>
+    {{ template "Navbar" .}}
+        <div class="d-flex justify-content-center align-items-center vh-100 flex-column ">
+            <h1>Admin page</h1>
+            <div class="">
+
+                <a class="btn btn-primary" role="button" href="/admin/users">See All Users</a>
+                <a class="btn btn-primary" role="button" href="/admin/orders">See All Orders</a>
+                <a class="btn btn-primary" role="button" href="/admin/chef">Chef Page</a>
+            </div>
+
+        </div>
+        {{ template "Bootstrap" .}}
+</body>
+
+</html>

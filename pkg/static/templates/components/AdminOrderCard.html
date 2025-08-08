@@ -1,0 +1,82 @@
+{{define "AdminOrderCard"}}
+<div class=" box-shadow card-box m-1 d-flex align-items-center flex-column p-3">
+    <!-- . is Array of Items -->
+    <div class="d-flex gap-2 justify-content-center flex-column">
+        <h4>
+            order ID: {{ with index . 0}} {{.OrderID}} {{end}}<br>
+            user ID: {{ with index . 0}} {{.CustomerID}} {{end}} <br>
+            table ID: {{ with index . 0}} {{.TableID}} {{end}} <br>
+            order status:{{ with index . 0}} {{.Order_status}} {{end}}
+        </h4>
+        <div class="btns d-flex flex-column gap-1 m-2">
+            <!-- Conditionally Render Buttons -->
+            {{ with index . 0 }}
+
+
+            {{ if eq .Order_status "paid" }}
+            {{ else if eq .Order_status "billed" }}
+            <button class="btn btn-sm btn-success markBill disabled" type="submit" id="{{ .OrderID }}">Bill order</button>
+            <button class="btn btn-sm btn-danger markPaid" type="submit" id="{{ .OrderID }}">Mark Paid</button>
+            {{ else }}
+
+            {{ if eq .Order_status "cooking" }}
+            <button class="btn btn-sm btn-success markCooking" type="submit" id="{{ .OrderID }}">Mark order cooking</button>
+            {{ else }}
+            <button class="btn btn-sm btn-primary markCooking" type="submit" id="{{ .OrderID }}">Mark order cooking</button>
+            {{ end }}
+
+            {{ if eq .Order_status "served" }}
+            <button class="btn btn-sm btn-success markServed" type="submit" id="{{ .OrderID }}">Mark order served</button>
+            {{ else }}
+            <button class="btn btn-sm btn-primary markServed" type="submit" id="{{ .OrderID }}">Mark order served</button>
+            {{ end }}
+
+            <button class="btn btn-sm btn-danger markBill" type="submit" id="{{ .OrderID }}">Bill order</button>
+            {{ end }}
+
+            {{ end }}
+        </div>
+    </div>
+
+    <div class="d-flex flex-column w-100">
+
+        {{ range . }}
+        <!-- Item Qty Info -->
+        <div class="card ">
+            <div class="card-header">
+                <h6>Item: {{.ItemName}}
+                </h6>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">Qty: {{.Qty}} Price: {{.Price}} </li>
+            </ul>
+
+        </div>
+        {{end}}
+        <div class="bottom">
+            <!-- Special Instructions and Amount -->
+            <div class="card">
+                <div class="card-header">
+                    <h6>Special instructions:</h6>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                       {{ with index . 0}} {{.Extra_instructions}} {{end}}
+                </ul>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h6>Total Amount:</h6>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <b> ₹ {{ with index . 0}} {{.Total_amount}} {{end}} </b>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+
+</div>
+{{end}}
