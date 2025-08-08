@@ -7,6 +7,9 @@ import (
 
 func RegisterAdminRouter(AdminRouter *mux.Router) {
 	AdminRouter.HandleFunc("", controllers.RenderAdminHome).Methods("GET")
+	AdminRouter.HandleFunc("/{id}", controllers.HandleMakeAdmin).Methods("PATCH")
+	AdminRouter.HandleFunc("/{id}", controllers.HandleMakeCustomer).Methods("DELETE")
+
 	AdminRouter.HandleFunc("/users", controllers.RenderAdminUsers).Methods("GET")
 	AdminRouter.HandleFunc("/orders", controllers.RenderAdminOrders).Methods("GET")
 	// AdminRouter.HandleFunc("/inventory", controllers.RenderAdminHome).Methods("GET")

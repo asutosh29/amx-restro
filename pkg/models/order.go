@@ -109,6 +109,28 @@ func GetAllOrdersByOrder() ([][]types.OrderItem, error) {
 	return OrderList, nil
 }
 
+func GetAllOrdersByOrderByStatus(statusName string) ([][]types.OrderItem, error) {
+	var IdList []int
+	var OrderList [][]types.OrderItem
+	// var OrderList []any
+	// Create Unique ID List
+	ids, _ := DB.Query(`select distinct order_id  from orders where order_status = ?  order by order_id ASC;`, statusName)
+	for ids.Next() {
+		var temp int
+		ids.Scan(&temp)
+		IdList = append(IdList, temp)
+	}
+
+	// Fetch Orders by ID
+	for _, orderId := range IdList {
+		var tempOrderItem []types.OrderItem
+		tempOrderItem, _ = GetOrder(orderId)
+		OrderList = append(OrderList, tempOrderItem)
+	}
+	// return the Slice of orders
+	return OrderList, nil
+}
+
 func GetOrder(orderId int) ([]types.OrderItem, error) {
 	rows, err := DB.Query(`select orders.order_id, customer_id, tables.table_id, extra_instructions, order_status, total_amount, order_at_time, items.item_id, qty, category_id, item_name, item_description, img_url, price, isVeg, items.isAvailable 
                 from orders 

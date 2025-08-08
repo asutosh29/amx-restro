@@ -3,22 +3,17 @@ package controllers
 import (
 	"html/template"
 	"net/http"
-
-	"github.com/asutosh29/amx-restro/pkg/models"
 )
 
-func RenderChef(w http.ResponseWriter, r *http.Request) {
+func RenderProfile(w http.ResponseWriter, r *http.Request) {
 
 	data := make(map[string]interface{})
 
 	User := r.Context().Value("User")
-	allOrders, _ := models.GetAllOrdersByOrder()
-	data["Orders"] = allOrders
 	data["User"] = User
 
 	templFiles := []string{
-		"pkg/static/templates/chef.html",
-		"pkg/static/templates/components/ChefOrderCard.html",
+		"pkg/static/templates/profile.html",
 		"pkg/static/templates/partials/head.html",
 		"pkg/static/templates/partials/message.html",
 		"pkg/static/templates/partials/bootstrap.html",

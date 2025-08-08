@@ -50,9 +50,20 @@ func AddUser(user types.User) error {
 	return nil
 }
 
+func GetAllUsers() ([]types.User, error) {
+	var AllUsers []types.User
+	rows, _ := DB.Query("select id, email, username, first_name, last_name, contact, hashpwd, userRole from users")
+	for rows.Next() {
+		var DbUser types.User
+		rows.Scan(&DbUser.UserId, &DbUser.Email, &DbUser.Username, &DbUser.First_name, &DbUser.Last_name, &DbUser.Contact, &DbUser.Hashpwd, &DbUser.Userole)
+		AllUsers = append(AllUsers, DbUser)
+	}
+	return AllUsers, nil
+}
+
 func GetUser(user types.User) (types.User, error) {
 	var DbUser types.User
-	err := DB.QueryRow("select email, username, first_name, last_name, contact, hashpwd, userRole from users where email=?", user.Email).Scan(&DbUser.Email, &DbUser.Username, &DbUser.First_name, &DbUser.Last_name, &DbUser.Contact, &DbUser.Hashpwd, &DbUser.Userole)
+	err := DB.QueryRow("select id, email, username, first_name, last_name, contact, hashpwd, userRole from users where email=?", user.Email).Scan(&DbUser.UserId, &DbUser.Email, &DbUser.Username, &DbUser.First_name, &DbUser.Last_name, &DbUser.Contact, &DbUser.Hashpwd, &DbUser.Userole)
 	if err != nil {
 		return DbUser, err
 	}
@@ -68,4 +79,22 @@ func GertUserId(user types.User) (int, error) {
 
 	}
 	return UserId, nil
+}
+
+func MakeAdminById(userId int) (int, error) {
+	_, err := DB.Exec(`update users set userRole = "admin" where id = ?`, userId)
+	if err != nil {
+		fmt.Println("Error Making User as Admin")
+		return userId, err
+	}
+	return userId, nil
+}
+
+func MakeCustomerById(userId int) (int, error) {
+	_, err := DB.Exec(`update users set userRole = "customer" where id = ?`, userId)
+	if err != nil {
+		fmt.Println("Error Making User as Admin")
+		return userId, err
+	}
+	return userId, nil
 }

@@ -32,6 +32,7 @@ func Start() {
 
 	// Admin router
 	AdminRouter := r.PathPrefix("/admin").Subrouter()
+	AdminRouter.Use(middlewares.AdminAccessOnly)
 	routers.RegisterAdminRouter(AdminRouter)
 
 	// Auth Routes

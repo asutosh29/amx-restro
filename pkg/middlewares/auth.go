@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/asutosh29/amx-restro/pkg/types"
 	"github.com/asutosh29/amx-restro/pkg/utils/jwt_utils"
 )
 
@@ -65,5 +66,16 @@ func NewUser(next http.Handler) http.Handler {
 		}
 		// TODO: Store User in context for Frontend
 		http.Redirect(w, r, "/home", http.StatusSeeOther)
+	})
+}
+
+// AdminAccessOnly
+func AdminAccessOnly(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		User := r.Context().Value("User").(types.User)
+		if !(User.Userole == "admin") && !(User.Userole == "super") {
+			http.Redirect(w, r, "/login", http.StatusSeeOther)
+		}
+		next.ServeHTTP(w, r)
 	})
 }

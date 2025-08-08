@@ -1,0 +1,52 @@
+{{define "ChefOrderCard"}}
+{{ if or (eq (index . 0).Order_status "placed") (eq (index . 0).Order_status "cooking") }}
+<div class="d-flex flex-column align-items-center box-shadow p-3 card-box">
+    <div class="d-flex gap-2 justify-content-center flex-column">
+        <h4>
+            order ID: {{ (index . 0).OrderID }}
+        </h4>
+        <div class="btns">
+            {{ if eq (index . 0).Order_status "cooking" }}
+            <button class="btn btn-sm btn-success markCooking" type="submit" id="{{ (index . 0).OrderID }}">Mark order
+                cooking</button>
+            {{ else }}
+            <button class="btn btn-sm btn-primary markCooking" type="submit" id="{{ (index . 0).OrderID }}">Mark order
+                cooking</button>
+            {{ end }}
+
+            {{ if eq (index . 0).Order_status "served" }}
+            <button class="btn btn-sm btn-success markServed" type="submit" id="{{ (index . 0).OrderID }}">Mark order
+                served</button>
+            {{ else }}
+            <button class="btn btn-sm btn-primary markServed" type="submit" id="{{ (index . 0).OrderID }}">Mark order
+                served</button>
+            {{ end }}
+        </div>
+    </div>
+
+    <div class="d-flex flex-column">
+        {{ range . }}
+        <div class="card" style="width: 18rem;">
+            <div class="card-header">
+                Item: {{ .ItemName }}
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">Qty: {{ .Qty }}</li>
+            </ul>
+        </div>
+        {{ end }}
+
+        <div class="card" style="width: 18rem;">
+            <div class="card-header">
+                Special instructions:
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    {{ (index . 0).Extra_instructions }}
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+{{ end}}
+{{end}}

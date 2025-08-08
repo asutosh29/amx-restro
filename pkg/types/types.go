@@ -1,6 +1,7 @@
 package types
 
 type User struct {
+	UserId     int
 	Username   string
 	Email      string
 	First_name string
