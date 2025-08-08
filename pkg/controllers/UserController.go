@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"time"
@@ -40,7 +39,7 @@ func HandleRegisterUser(w http.ResponseWriter, r *http.Request) {
 		user.Userole = "super"
 		fmt.Println("Super User waas added")
 		models.AddUser(user)
-		json.NewEncoder(w).Encode(user)
+		http.Redirect(w, r, "/login", http.StatusSeeOther)
 		return
 	}
 
@@ -76,7 +75,7 @@ func HandleRegisterUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// TODO: Flash - User registered successfully
-	RenderHome(w, r)
+	http.Redirect(w, r, "/login", http.StatusSeeOther)
 }
 
 func HandleLoginUser(w http.ResponseWriter, r *http.Request) {

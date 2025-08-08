@@ -1,6 +1,10 @@
 package session_utils
 
-import "github.com/gorilla/sessions"
+import (
+	"os"
 
-// TODO: add this to ENV
-var Store = sessions.NewCookieStore([]byte("session-secret"))
+	"github.com/gorilla/sessions"
+)
+
+var session_secret = []byte(os.Getenv("SESSION_SECRET"))
+var Store = sessions.NewCookieStore([]byte(session_secret))

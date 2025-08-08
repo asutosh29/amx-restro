@@ -1,13 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {{ template "Head" .}}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Restr | Payment</title>
 </head>
 <body>
+    {{ template "Navbar" .}}
     <h1>Order Placed Successfully</h1>
     <p>Order id: {{ .OrderID }}</p>
     <p>Table id: {{ .TableID }}</p>
+    <a href="/menu"><button class="btn btn-sm btn-primary" type="submit">Place New order!</button></a>
+    {{ template "Bootstrap" .}}
 </body>
 </html>
