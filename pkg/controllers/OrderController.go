@@ -24,12 +24,11 @@ func HandlePostOrder(w http.ResponseWriter, r *http.Request) {
 	// TODO: set orderID and tableID in context for showing order placed
 	store := session_utils.Store
 	session, _ := store.Get(r, "payments")
+
+	// Saving
 	session.Values["orderID"] = orderId
 	session.Values["tableID"] = tableID
 	session.Save(r, w)
-	// ctx := context.WithValue(r.Context(), types.OrderID{}, orderId)
-	// ctx = context.WithValue(ctx, types.TableID{}, tableID)
-	// r = r.WithContext(ctx)
 
 	type Res struct {
 		Url string `json:"url"`

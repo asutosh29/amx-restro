@@ -1,10 +1,10 @@
 package controllers
 
 import (
-	"html/template"
 	"net/http"
 
 	"github.com/asutosh29/amx-restro/pkg/models"
+	"github.com/asutosh29/amx-restro/pkg/views"
 )
 
 func RenderChef(w http.ResponseWriter, r *http.Request) {
@@ -16,14 +16,5 @@ func RenderChef(w http.ResponseWriter, r *http.Request) {
 	data["Orders"] = allOrders
 	data["User"] = User
 
-	templFiles := []string{
-		"pkg/static/templates/chef.html",
-		"pkg/static/templates/components/ChefOrderCard.html",
-		"pkg/static/templates/partials/head.html",
-		"pkg/static/templates/partials/message.html",
-		"pkg/static/templates/partials/bootstrap.html",
-		"pkg/static/templates/partials/navbar.html",
-	}
-	tpl := template.Must(template.ParseFiles(templFiles...))
-	tpl.Execute(w, data)
+	views.Tpl.ExecuteTemplate(w, "chef.html", data)
 }

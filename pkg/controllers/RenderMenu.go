@@ -2,10 +2,10 @@ package controllers
 
 import (
 	"fmt"
-	"html/template"
 	"net/http"
 
 	"github.com/asutosh29/amx-restro/pkg/models"
+	"github.com/asutosh29/amx-restro/pkg/views"
 )
 
 func RenderMenu(w http.ResponseWriter, r *http.Request) {
@@ -25,12 +25,10 @@ func RenderMenu(w http.ResponseWriter, r *http.Request) {
 	// Get items by category
 	if category_query == "" {
 		items, _ = models.GetAllItems()
-		// fmt.Println("items: ", items)
 	} else {
 		items, err = models.GetAllItemsByCategory(category_query)
 		if err != nil {
-			// Invalid Category
-			// Show All Items
+			// Invalid Category, Show All Items
 			items, _ = models.GetAllItems()
 		}
 	}
@@ -44,27 +42,11 @@ func RenderMenu(w http.ResponseWriter, r *http.Request) {
 			fmt.Println(err)
 		}
 	}
-	// fmt.Println("items:", items)
-
-	// Package the data
-
-	// Render the templates
-
-	templFiles := []string{
-		"pkg/static/templates/menu.html",
-		"pkg/static/templates/partials/head.html",
-		"pkg/static/templates/partials/message.html",
-		"pkg/static/templates/partials/bootstrap.html",
-		"pkg/static/templates/partials/navbar.html",
-		"pkg/static/templates/partials/categories.html",
-		"pkg/static/templates/components/MenuCard.html",
-	}
 
 	data := make(map[string]interface{})
-	// TODO: Retrive this from the user object. Dummy for now
 	data["User"] = r.Context().Value("User")
 	data["Items"] = items
 	data["Categories"] = CategoryList
-	tpl := template.Must(template.ParseFiles(templFiles...))
-	tpl.Execute(w, data)
+
+	views.Tpl.ExecuteTemplate(w, "menu.html", data)
 }

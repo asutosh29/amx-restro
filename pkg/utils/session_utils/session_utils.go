@@ -5,5 +5,8 @@ import (
 	"github.com/gorilla/sessions"
 )
 
+// For SSR will be removed while CSR
 var session_secret = []byte(config.SessionSecret)
-var Store = sessions.NewCookieStore([]byte(session_secret))
+var Store = sessions.NewCookieStore(session_secret)
+
+// Store = sessions.NewCookieStore(session_secret)

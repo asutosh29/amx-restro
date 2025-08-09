@@ -12,9 +12,6 @@ import (
 
 var DB *sql.DB
 
-// TODO: Break into functions
-// * NOTE: When you actually do your assignment, make utility loaders and a config package for env references.
-
 func InitDatabase() (*sql.DB, error) {
 	// Load environment variables
 	err := godotenv.Load()
@@ -23,11 +20,11 @@ func InitDatabase() (*sql.DB, error) {
 	}
 
 	// Get database connection details from environment
-	DbHost := config.DbHost
-	DbUser := config.DbUser
-	DbPassword := config.DbPassword
-	Database := config.Database
-	DbPort := config.DbPort
+	DbHost := config.Db_config.DbHost
+	DbUser := config.Db_config.DbUser
+	DbPassword := config.Db_config.DbPassword
+	Database := config.Db_config.Database
+	DbPort := config.Db_config.DbPort
 
 	// Create connection string
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true",

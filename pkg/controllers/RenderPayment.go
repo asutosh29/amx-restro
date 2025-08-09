@@ -2,10 +2,10 @@ package controllers
 
 import (
 	"fmt"
-	"html/template"
 	"net/http"
 
 	"github.com/asutosh29/amx-restro/pkg/utils/session_utils"
+	"github.com/asutosh29/amx-restro/pkg/views"
 )
 
 func RenderPayment(w http.ResponseWriter, r *http.Request) {
@@ -15,15 +15,21 @@ func RenderPayment(w http.ResponseWriter, r *http.Request) {
 	User := r.Context().Value("User")
 	data["User"] = User
 
-	// orderID := r.Context().Value("orderID")
-	// tableID := r.Context().Value("tableID")
 	store := session_utils.Store
-	session, _ := store.Get(r, "payments")
-	orderID, _ := session.Values["orderID"].(int)
-	tableID, _ := session.Values["tableID"].(int)
+	session, err := store.Get(r, "payments")
+
+	// TODO: Fix Session Issue
+	if err != nil {
+		fmt.Println("Error Loading session")
+		fmt.Println(err)
+	}
+	fmt.Println("session", session)
+	orderID := session.Values["orderID"]
+	tableID := session.Values["tableID"]
 
 	session.Values["orderID"] = -1
 	session.Values["tableID"] = -1
+	session.Save(r, w)
 
 	if orderID == -1 || tableID == -1 {
 		fmt.Println("Bro pehle khaana order kro!")
@@ -33,13 +39,5 @@ func RenderPayment(w http.ResponseWriter, r *http.Request) {
 	data["OrderID"] = orderID
 	data["TableID"] = tableID
 
-	templFiles := []string{
-		"pkg/static/templates/payment.html",
-		"pkg/static/templates/partials/head.html",
-		"pkg/static/templates/partials/message.html",
-		"pkg/static/templates/partials/bootstrap.html",
-		"pkg/static/templates/partials/navbar.html",
-	}
-	tpl := template.Must(template.ParseFiles(templFiles...))
-	tpl.Execute(w, data)
+	views.Tpl.ExecuteTemplate(w, "payment.html", data)
 }

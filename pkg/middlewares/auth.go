@@ -36,7 +36,6 @@ func LoggedIn(next http.Handler) http.Handler {
 
 		// TODO: Store User in context for Frontend
 		ctx := context.WithValue(r.Context(), "User", claims.User)
-		// ctx = context.WithValue(ctx, "key", value)
 		r = r.WithContext(ctx)
 
 		next.ServeHTTP(w, r)

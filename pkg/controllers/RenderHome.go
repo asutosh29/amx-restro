@@ -1,24 +1,16 @@
 package controllers
 
 import (
-	"html/template"
 	"net/http"
+
+	"github.com/asutosh29/amx-restro/pkg/views"
 )
 
 func RenderHome(w http.ResponseWriter, r *http.Request) {
+	User := r.Context().Value("User")
 
 	data := make(map[string]interface{})
-
-	User := r.Context().Value("User")
 	data["User"] = User
 
-	templFiles := []string{
-		"pkg/static/templates/home.html",
-		"pkg/static/templates/partials/head.html",
-		"pkg/static/templates/partials/message.html",
-		"pkg/static/templates/partials/bootstrap.html",
-		"pkg/static/templates/partials/navbar.html",
-	}
-	tpl := template.Must(template.ParseFiles(templFiles...))
-	tpl.Execute(w, data)
+	views.Tpl.ExecuteTemplate(w, "home.html", data)
 }
