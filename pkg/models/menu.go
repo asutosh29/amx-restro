@@ -5,25 +5,9 @@ import (
 	"fmt"
 	"slices"
 
+	"github.com/asutosh29/amx-restro/pkg/types"
 	"github.com/asutosh29/amx-restro/pkg/utils/config"
 )
-
-type Category struct {
-	Category_id   int
-	Category_name string
-}
-
-type Item struct {
-	Item_id          int
-	Category_id      int
-	Category_name    string
-	Item_name        string
-	Item_description string
-	Img_url          string
-	Price            float32
-	IsVeg            bool
-	IsAvailable      bool
-}
 
 func GetAllCategories() ([]string, error) {
 	rows, err := DB.Query(`
@@ -37,7 +21,7 @@ func GetAllCategories() ([]string, error) {
 	var CategoryList []string
 
 	for rows.Next() {
-		var catg Category
+		var catg types.Category
 		if err := rows.Scan(&catg.Category_id, &catg.Category_name); err != nil {
 			fmt.Println("Error adding categories")
 			return []string{}, err
@@ -47,20 +31,20 @@ func GetAllCategories() ([]string, error) {
 	return CategoryList, nil
 }
 
-func GetAllItems() ([]Item, error) {
+func GetAllItems() ([]types.Item, error) {
 	rows, _ := DB.Query(`
     SELECT item_id, items.category_id, category_name, item_name, item_description, img_url, price, isVeg
     FROM items
     JOIN category ON items.category_id = category.category_id;
 `)
-	var ItemList []Item
+	var ItemList []types.Item
 	for rows.Next() {
-		var temp Item
+		var temp types.Item
 		err := rows.Scan(&temp.Item_id, &temp.Category_id, &temp.Category_name, &temp.Item_name, &temp.Item_description, &temp.Img_url, &temp.Price, &temp.IsVeg)
 		if err != nil {
 			fmt.Println("Error adding item ")
 			fmt.Println(err)
-			return []Item{}, err
+			return []types.Item{}, err
 		}
 
 		ItemList = append(ItemList, temp)
@@ -69,7 +53,7 @@ func GetAllItems() ([]Item, error) {
 	return ItemList, nil
 }
 
-func GetAllItemsByCategory(category_name string) ([]Item, error) {
+func GetAllItemsByCategory(category_name string) ([]types.Item, error) {
 
 	// Valid Categories
 	category_list := config.ValidCategories
@@ -77,7 +61,7 @@ func GetAllItemsByCategory(category_name string) ([]Item, error) {
 	IsValidCategory := slices.Contains(category_list, category_name)
 	if !IsValidCategory {
 		fmt.Println("Invalid category")
-		return []Item{}, errors.New("invalid Category")
+		return []types.Item{}, errors.New("invalid Category")
 	}
 
 	//
@@ -87,14 +71,14 @@ func GetAllItemsByCategory(category_name string) ([]Item, error) {
     JOIN category ON items.category_id = category.category_id
     WHERE category_name = ?
 `, category_name)
-	var ItemList []Item
+	var ItemList []types.Item
 	for rows.Next() {
-		var temp Item
+		var temp types.Item
 		err := rows.Scan(&temp.Item_id, &temp.Category_id, &temp.Category_name, &temp.Item_name, &temp.Item_description, &temp.Img_url, &temp.Price, &temp.IsVeg)
 		if err != nil {
 			fmt.Println("Error adding item by category")
 			fmt.Println(err)
-			return []Item{}, err
+			return []types.Item{}, err
 		}
 		ItemList = append(ItemList, temp)
 	}
@@ -102,21 +86,21 @@ func GetAllItemsByCategory(category_name string) ([]Item, error) {
 	return ItemList, nil
 }
 
-func GetAllItemsBySearch(search_query string) ([]Item, error) {
+func GetAllItemsBySearch(search_query string) ([]types.Item, error) {
 	rows, _ := DB.Query(`
     SELECT item_id, items.category_id, category_name, item_name, item_description, img_url, price, isVeg
     FROM items
     JOIN category ON items.category_id = category.category_id
     WHERE item_name LIKE ?
 `, "%"+search_query+"%")
-	var ItemList []Item
+	var ItemList []types.Item
 	for rows.Next() {
-		var temp Item
+		var temp types.Item
 		err := rows.Scan(&temp.Item_id, &temp.Category_id, &temp.Category_name, &temp.Item_name, &temp.Item_description, &temp.Img_url, &temp.Price, &temp.IsVeg)
 		if err != nil {
 			fmt.Println("Error searching item ")
 			fmt.Println(err)
-			return []Item{}, err
+			return []types.Item{}, err
 		}
 
 		ItemList = append(ItemList, temp)

@@ -9,17 +9,6 @@ import (
 	"github.com/asutosh29/amx-restro/pkg/types"
 )
 
-type Cart struct {
-	Id   int
-	Qty  int
-	Info Item
-}
-
-type Table struct {
-	Table_id    int
-	IsAvailable bool
-}
-
 func AddOrder(instruction string, cart []types.CartItem, user types.User) (int, int) {
 	// Get User ID
 	userID, _ := GertUserId(user)
@@ -280,15 +269,15 @@ func MarkOrderPaidById(orderID int) error {
 }
 
 // Table
-func AvailableTables() ([]Table, error) {
+func AvailableTables() ([]types.Table, error) {
 	rows, _ := DB.Query(`
     SELECT table_id, isAvailable
     FROM tables
     WHERE isAvailable = 1
 `)
-	var tables []Table
+	var tables []types.Table
 	for rows.Next() {
-		var temp Table
+		var temp types.Table
 		rows.Scan(&temp.Table_id, &temp.IsAvailable)
 		tables = append(tables, temp)
 	}
@@ -309,22 +298,22 @@ func SetTable(table_id int, IsAvailable int) error {
 }
 
 // Items
-func GetItems(idString string) ([]Item, error) {
+func GetItems(idString string) ([]types.Item, error) {
 	q := fmt.Sprintf(`
     SELECT item_id, items.category_id, item_name, item_description, img_url, price, isVeg
     FROM items
     WHERE item_id IN (%s)
 `, idString)
 	rows, _ := DB.Query(q)
-	var ItemList []Item
+	var ItemList []types.Item
 
 	for rows.Next() {
-		var temp Item
+		var temp types.Item
 		err := rows.Scan(&temp.Item_id, &temp.Category_id, &temp.Item_name, &temp.Item_description, &temp.Img_url, &temp.Price, &temp.IsVeg)
 		if err != nil {
 			fmt.Println("Error adding item by category")
 			fmt.Println(err)
-			return []Item{}, err
+			return []types.Item{}, err
 		}
 		ItemList = append(ItemList, temp)
 	}

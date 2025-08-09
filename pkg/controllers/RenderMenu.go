@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/asutosh29/amx-restro/pkg/types"
 	"github.com/asutosh29/amx-restro/pkg/models"
 	"github.com/asutosh29/amx-restro/pkg/views"
 )
@@ -20,7 +21,7 @@ func RenderMenu(w http.ResponseWriter, r *http.Request) {
 	category_query := query_paramas.Get("category")
 	search_query := query_paramas.Get("search")
 
-	var items []models.Item
+	var items []types.Item
 
 	// Get items by category
 	if category_query == "" {

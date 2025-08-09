@@ -56,3 +56,33 @@ type Order_table_id struct {
 
 type OrderID struct{}
 type TableID struct{}
+
+//
+type Category struct {
+	Category_id   int
+	Category_name string
+}
+
+type Item struct {
+	Item_id          int
+	Category_id      int
+	Category_name    string
+	Item_name        string
+	Item_description string
+	Img_url          string
+	Price            float32
+	IsVeg            bool
+	IsAvailable      bool
+}
+
+//
+type Cart struct {
+	Id   int
+	Qty  int
+	Info Item
+}
+
+type Table struct {
+	Table_id    int
+	IsAvailable bool
+}
