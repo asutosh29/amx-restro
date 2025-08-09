@@ -4,6 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"slices"
+
+	"github.com/asutosh29/amx-restro/pkg/utils/config"
 )
 
 type Category struct {
@@ -66,16 +68,7 @@ ON items.category_id = category.category_id;`)
 func GetAllItemsByCategory(category_name string) ([]Item, error) {
 
 	// Valid Categories
-	category_list := []string{
-		"Appetizers",
-		"Main Course",
-		"Desserts",
-		"Beverages",
-		"Salads",
-		"Soups",
-		"Snacks",
-		"Combos",
-	}
+	category_list := config.ValidCategories
 
 	IsValidCategory := slices.Contains(category_list, category_name)
 	if !IsValidCategory {

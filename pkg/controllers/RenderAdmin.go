@@ -8,6 +8,7 @@ import (
 
 	"github.com/asutosh29/amx-restro/pkg/models"
 	"github.com/asutosh29/amx-restro/pkg/types"
+	"github.com/asutosh29/amx-restro/pkg/utils/config"
 )
 
 func RenderAdminHome(w http.ResponseWriter, r *http.Request) {
@@ -35,10 +36,10 @@ func RenderAdminOrders(w http.ResponseWriter, r *http.Request) {
 	var allOrders [][]types.OrderItem
 	params := r.URL.Query()
 	statusName := params.Get("category")
-	statusList := []string{"placed", "cooking", "served", "billed", "paid"}
+	statusList := config.ValidStatus
 
-	IsValidCategory := slices.Contains(statusList, statusName)
-	if !IsValidCategory {
+	IsValidStatus := slices.Contains(statusList, statusName)
+	if !IsValidStatus {
 		temp, err := models.GetAllOrdersByOrder()
 		allOrders = temp
 		if err != nil {

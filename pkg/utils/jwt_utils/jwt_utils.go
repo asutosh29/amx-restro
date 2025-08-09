@@ -1,13 +1,12 @@
 package jwt_utils
 
 import (
-	"os"
-
 	"github.com/asutosh29/amx-restro/pkg/types"
+	"github.com/asutosh29/amx-restro/pkg/utils/config"
 	"github.com/golang-jwt/jwt"
 )
 
-var jwtKey = []byte(os.Getenv("JWT_SECRET"))
+var jwtKey = []byte(config.JWTkey)
 
 type Claims struct {
 	User types.User

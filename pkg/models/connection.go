@@ -3,9 +3,9 @@ package models
 import (
 	"database/sql"
 	"fmt"
-	"os"
 	"time"
 
+	"github.com/asutosh29/amx-restro/pkg/utils/config"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/joho/godotenv"
 )
@@ -23,15 +23,15 @@ func InitDatabase() (*sql.DB, error) {
 	}
 
 	// Get database connection details from environment
-	dbHost := os.Getenv("MYSQL_HOST")
-	dbUser := os.Getenv("MYSQL_USER")
-	dbPassword := os.Getenv("MYSQL_PASSWORD")
-	database := os.Getenv("MYSQL_DATABASE")
-	dbPort := os.Getenv("MYSQL_PORT")
+	DbHost := config.DbHost
+	DbUser := config.DbUser
+	DbPassword := config.DbPassword
+	Database := config.Database
+	DbPort := config.DbPort
 
 	// Create connection string
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true",
-		dbUser, dbPassword, dbHost, dbPort, database)
+		DbUser, DbPassword, DbHost, DbPort, Database)
 
 	// Open database connection
 	DB, err = sql.Open("mysql", dsn)
