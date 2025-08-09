@@ -22,7 +22,7 @@ func HandleRegisterUser(w http.ResponseWriter, r *http.Request) {
 		Last_name:  r.FormValue("last_name"),
 		Contact:    r.FormValue("contact"),
 		Hashpwd:    hashpwd,
-		Userole:    "customer",
+		Userole:    types.ROLE().CUSTOMER,
 	}
 
 	if user.Username == "" || user.Email == "" || user.First_name == "" || user.Last_name == "" || user.Contact == "" || user.Hashpwd == "" {
@@ -36,7 +36,7 @@ func HandleRegisterUser(w http.ResponseWriter, r *http.Request) {
 
 	// TODO: Implement first user is Super user
 	if models.IsFirstUser(user) {
-		user.Userole = "super"
+		user.Userole = types.ROLE().SUPER
 		fmt.Println("Super User waas added")
 		models.AddUser(user)
 		http.Redirect(w, r, "/login", http.StatusSeeOther)

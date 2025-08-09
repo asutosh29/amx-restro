@@ -29,6 +29,32 @@ func AddOrder(instruction string, cart []types.CartItem, user types.User) (int, 
 	// Format Time in Correct Format
 	order_at_time := time.Now().Format("2006-01-02 15:04:05")
 
+	// Calculate Total Amount
+	totalAmount := GetTotalAmount(cart)
+
+	// Insert into DB
+	result, err := DB.Exec(`
+    INSERT INTO orders (customer_id, table_id, extra_instructions, total_amount, order_at_time)
+    VALUES (?, ?, ?, ?, ?)
+`, userID, table_id, instruction, totalAmount, order_at_time)
+	if err != nil {
+		fmt.Println("Error placing order")
+		fmt.Println(err)
+		return -1, -1
+	}
+
+	orderID, _ := result.LastInsertId()
+
+	for _, it_qt := range cart {
+		DB.Exec(`
+    INSERT INTO order_item (item_id, order_id, qty)
+    VALUES (?, ?, ?)
+`, it_qt.ID, orderID, it_qt.Qty)
+	}
+	return int(orderID), table_id
+}
+
+func GetTotalAmount(cart []types.CartItem) float32 {
 	// Extract item IDs from the input to query the database.
 	var itemIDs []string
 	for _, item := range cart {
@@ -58,27 +84,7 @@ func AddOrder(instruction string, cart []types.CartItem, user types.User) (int, 
 			totalAmount += float32(ordered_qty) * float32(price)
 		}
 	}
-
-	// Insert into DB
-	result, err := DB.Exec(`
-    INSERT INTO orders (customer_id, table_id, extra_instructions, total_amount, order_at_time)
-    VALUES (?, ?, ?, ?, ?)
-`, userID, table_id, instruction, totalAmount, order_at_time)
-	if err != nil {
-		fmt.Println("Error placing order")
-		fmt.Println(err)
-		return -1, -1
-	}
-
-	orderID, _ := result.LastInsertId()
-
-	for _, it_qt := range cart {
-		DB.Exec(`
-    INSERT INTO order_item (item_id, order_id, qty)
-    VALUES (?, ?, ?)
-`, it_qt.ID, orderID, it_qt.Qty)
-	}
-	return int(orderID), table_id
+	return totalAmount
 }
 
 func GetAllOrdersByOrder() ([][]types.OrderItem, error) {

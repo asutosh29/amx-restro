@@ -6,6 +6,7 @@ import (
 
 	"github.com/asutosh29/amx-restro/pkg/api/routers"
 	"github.com/asutosh29/amx-restro/pkg/middlewares"
+	"github.com/asutosh29/amx-restro/pkg/utils/config"
 	"github.com/gorilla/mux"
 )
 
@@ -44,6 +45,7 @@ func Start() {
 	AuthRouter.Use(middlewares.NewUser)
 	routers.RegisterAuthRouter(AuthRouter)
 
+	PORT := config.PORT
 	fmt.Println("Server starting running on port: 8000")
-	http.ListenAndServe(":8000", r)
+	http.ListenAndServe(fmt.Sprintf(":%v", PORT), r)
 }

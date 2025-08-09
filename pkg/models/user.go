@@ -94,9 +94,9 @@ func GetUser(user types.User) (types.User, error) {
 func MakeAdminById(userId int) (int, error) {
 	_, err := DB.Exec(`
     UPDATE users
-    SET userRole = "admin"
+    SET userRole = ?
     WHERE id = ?
-`, userId)
+`, types.ROLE().ADMIN, userId)
 	if err != nil {
 		fmt.Println("Error Making User as Admin")
 		return userId, err
@@ -107,9 +107,9 @@ func MakeAdminById(userId int) (int, error) {
 func MakeCustomerById(userId int) (int, error) {
 	_, err := DB.Exec(`
     UPDATE users
-    SET userRole = "customer"
+    SET userRole = ?
     WHERE id = ?
-`, userId)
+`, types.ROLE().CUSTOMER, userId)
 	if err != nil {
 		fmt.Println("Error Making User as Admin")
 		return userId, err

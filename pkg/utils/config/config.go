@@ -1,7 +1,9 @@
 package config
 
 import (
+	"fmt"
 	"os"
+	"strconv"
 
 	"github.com/joho/godotenv"
 )
@@ -21,8 +23,10 @@ var ValidStatus = []string{}
 
 var JWTkey string
 var SessionSecret string
+var PORT int
 
 func InitConfig() {
+	var err error
 	// Load Env
 	godotenv.Load()
 
@@ -46,4 +50,8 @@ func InitConfig() {
 
 	JWTkey = os.Getenv("JWT_SECRET")
 	SessionSecret = os.Getenv("SESSION_SECRET")
+	PORT, err = strconv.Atoi(os.Getenv("PORT"))
+	if err != nil {
+		fmt.Println("Error Invalid Port Format")
+	}
 }
