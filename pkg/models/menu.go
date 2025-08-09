@@ -26,7 +26,10 @@ type Item struct {
 }
 
 func GetAllCategories() ([]string, error) {
-	rows, err := DB.Query("select category_id, category_name from category")
+	rows, err := DB.Query(`
+    SELECT category_id, category_name
+    FROM category
+`)
 	if err != nil {
 		fmt.Println("Error fetching categories")
 		return []string{}, err
@@ -45,10 +48,11 @@ func GetAllCategories() ([]string, error) {
 }
 
 func GetAllItems() ([]Item, error) {
-	rows, _ := DB.Query(`select item_id, items.category_id, category_name, item_name, item_description, img_url, price, isVeg
-from items 
-JOIN category
-ON items.category_id = category.category_id;`)
+	rows, _ := DB.Query(`
+    SELECT item_id, items.category_id, category_name, item_name, item_description, img_url, price, isVeg
+    FROM items
+    JOIN category ON items.category_id = category.category_id;
+`)
 	var ItemList []Item
 	for rows.Next() {
 		var temp Item
@@ -77,11 +81,12 @@ func GetAllItemsByCategory(category_name string) ([]Item, error) {
 	}
 
 	//
-	rows, _ := DB.Query(`select item_id, items.category_id, category_name, item_name, item_description, img_url, price, isVeg
-from items 
-JOIN category
-ON items.category_id = category.category_id
-WHERE category_name= ? `, category_name)
+	rows, _ := DB.Query(`
+    SELECT item_id, items.category_id, category_name, item_name, item_description, img_url, price, isVeg
+    FROM items
+    JOIN category ON items.category_id = category.category_id
+    WHERE category_name = ?
+`, category_name)
 	var ItemList []Item
 	for rows.Next() {
 		var temp Item
@@ -98,11 +103,12 @@ WHERE category_name= ? `, category_name)
 }
 
 func GetAllItemsBySearch(search_query string) ([]Item, error) {
-	rows, _ := DB.Query(`select item_id, items.category_id, category_name, item_name, item_description, img_url, price, isVeg
-from items 
-JOIN category
-ON items.category_id = category.category_id
-WHERE item_name like ? `, "%"+search_query+"%")
+	rows, _ := DB.Query(`
+    SELECT item_id, items.category_id, category_name, item_name, item_description, img_url, price, isVeg
+    FROM items
+    JOIN category ON items.category_id = category.category_id
+    WHERE item_name LIKE ?
+`, "%"+search_query+"%")
 	var ItemList []Item
 	for rows.Next() {
 		var temp Item

@@ -7,7 +7,10 @@ import (
 )
 
 func IsFirstUser(user types.User) bool {
-	row := DB.QueryRow("select email, username from users")
+	row := DB.QueryRow(`
+    SELECT email, username
+    FROM users
+`)
 	var email string
 	var username string
 	row.Scan(&email, &username)
@@ -19,7 +22,11 @@ func IsFirstUser(user types.User) bool {
 
 func IsEmailUnique(user types.User) (bool, error) {
 	var email string
-	err := DB.QueryRow("select email from users where email=?", user.Email).Scan(&email)
+	err := DB.QueryRow(`
+    SELECT email
+    FROM users
+    WHERE email = ?
+`, user.Email).Scan(&email)
 	if err != nil {
 		return true, err
 	}
@@ -31,7 +38,11 @@ func IsEmailUnique(user types.User) (bool, error) {
 
 func IsUserNameUnique(user types.User) (bool, error) {
 	var username string
-	err := DB.QueryRow("select username from users where username=?", user.Username).Scan(&username)
+	err := DB.QueryRow(`
+    SELECT username
+    FROM users
+    WHERE username = ?
+`, user.Username).Scan(&username)
 	if err != nil {
 		return true, err
 	}
@@ -42,7 +53,10 @@ func IsUserNameUnique(user types.User) (bool, error) {
 }
 
 func AddUser(user types.User) error {
-	_, err := DB.Exec("insert into users(email, username,userRole,first_name,last_name,contact, hashpwd) values(?,?,?,?,?,?,?)", user.Email, user.Username, user.Userole, user.First_name, user.Last_name, user.Contact, user.Hashpwd)
+	_, err := DB.Exec(`
+    INSERT INTO users (email, username, userRole, first_name, last_name, contact, hashpwd)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+`, user.Email, user.Username, user.Userole, user.First_name, user.Last_name, user.Contact, user.Hashpwd)
 	if err != nil {
 		return err
 	}
@@ -52,7 +66,10 @@ func AddUser(user types.User) error {
 
 func GetAllUsers() ([]types.User, error) {
 	var AllUsers []types.User
-	rows, _ := DB.Query("select id, email, username, first_name, last_name, contact, hashpwd, userRole from users")
+	rows, _ := DB.Query(`
+    SELECT id, email, username, first_name, last_name, contact, hashpwd, userRole
+    FROM users
+`)
 	for rows.Next() {
 		var DbUser types.User
 		rows.Scan(&DbUser.UserId, &DbUser.Email, &DbUser.Username, &DbUser.First_name, &DbUser.Last_name, &DbUser.Contact, &DbUser.Hashpwd, &DbUser.Userole)
@@ -63,7 +80,11 @@ func GetAllUsers() ([]types.User, error) {
 
 func GetUser(user types.User) (types.User, error) {
 	var DbUser types.User
-	err := DB.QueryRow("select id, email, username, first_name, last_name, contact, hashpwd, userRole from users where email=?", user.Email).Scan(&DbUser.UserId, &DbUser.Email, &DbUser.Username, &DbUser.First_name, &DbUser.Last_name, &DbUser.Contact, &DbUser.Hashpwd, &DbUser.Userole)
+	err := DB.QueryRow(`
+    SELECT id, email, username, first_name, last_name, contact, hashpwd, userRole
+    FROM users
+    WHERE email = ?
+`, user.Email).Scan(&DbUser.UserId, &DbUser.Email, &DbUser.Username, &DbUser.First_name, &DbUser.Last_name, &DbUser.Contact, &DbUser.Hashpwd, &DbUser.Userole)
 	if err != nil {
 		return DbUser, err
 	}
@@ -72,7 +93,11 @@ func GetUser(user types.User) (types.User, error) {
 
 func GertUserId(user types.User) (int, error) {
 	var UserId int
-	err := DB.QueryRow("select id  from users where email= ? ", user.Email).Scan(&UserId)
+	err := DB.QueryRow(`
+    SELECT id
+    FROM users
+    WHERE email = ?
+`, user.Email).Scan(&UserId)
 	print()
 	if err != nil {
 		return -1, err
@@ -82,7 +107,11 @@ func GertUserId(user types.User) (int, error) {
 }
 
 func MakeAdminById(userId int) (int, error) {
-	_, err := DB.Exec(`update users set userRole = "admin" where id = ?`, userId)
+	_, err := DB.Exec(`
+    UPDATE users
+    SET userRole = "admin"
+    WHERE id = ?
+`, userId)
 	if err != nil {
 		fmt.Println("Error Making User as Admin")
 		return userId, err
@@ -91,7 +120,11 @@ func MakeAdminById(userId int) (int, error) {
 }
 
 func MakeCustomerById(userId int) (int, error) {
-	_, err := DB.Exec(`update users set userRole = "customer" where id = ?`, userId)
+	_, err := DB.Exec(`
+    UPDATE users
+    SET userRole = "customer"
+    WHERE id = ?
+`, userId)
 	if err != nil {
 		fmt.Println("Error Making User as Admin")
 		return userId, err

@@ -71,8 +71,10 @@ func AddOrder(instruction string, cart []types.CartItem, user types.User) (int, 
 	}
 
 	// Insert into DB
-	result, err := DB.Exec(`insert into orders(customer_id, table_id, extra_instructions, total_amount, order_at_time)
-                    values(?, ?, ?, ?, ?)`, userID, table_id, instruction, totalAmount, order_at_time)
+	result, err := DB.Exec(`
+    INSERT INTO orders (customer_id, table_id, extra_instructions, total_amount, order_at_time)
+    VALUES (?, ?, ?, ?, ?)
+`, userID, table_id, instruction, totalAmount, order_at_time)
 	if err != nil {
 		fmt.Println("Error placing order")
 		fmt.Println(err)
@@ -82,7 +84,10 @@ func AddOrder(instruction string, cart []types.CartItem, user types.User) (int, 
 	orderID, _ := result.LastInsertId()
 
 	for _, it_qt := range cart {
-		DB.Exec(`insert into order_item(item_id, order_id, qty) value(?, ?, ?)`, it_qt.ID, orderID, it_qt.Qty)
+		DB.Exec(`
+    INSERT INTO order_item (item_id, order_id, qty)
+    VALUES (?, ?, ?)
+`, it_qt.ID, orderID, it_qt.Qty)
 	}
 	return int(orderID), table_id
 }
@@ -92,7 +97,11 @@ func GetAllOrdersByOrder() ([][]types.OrderItem, error) {
 	var OrderList [][]types.OrderItem
 	// var OrderList []any
 	// Create Unique ID List
-	ids, _ := DB.Query(`select distinct order_id  from orders order by order_id ASC`)
+	ids, _ := DB.Query(`
+    SELECT DISTINCT order_id
+    FROM orders
+    ORDER BY order_id ASC
+`)
 	for ids.Next() {
 		var temp int
 		ids.Scan(&temp)
@@ -114,7 +123,12 @@ func GetAllOrdersByOrderByStatus(statusName string) ([][]types.OrderItem, error)
 	var OrderList [][]types.OrderItem
 	// var OrderList []any
 	// Create Unique ID List
-	ids, _ := DB.Query(`select distinct order_id  from orders where order_status = ?  order by order_id ASC;`, statusName)
+	ids, _ := DB.Query(`
+    SELECT DISTINCT order_id
+    FROM orders
+    WHERE order_status = ?
+    ORDER BY order_id ASC;
+`, statusName)
 	for ids.Next() {
 		var temp int
 		ids.Scan(&temp)
@@ -132,18 +146,17 @@ func GetAllOrdersByOrderByStatus(statusName string) ([][]types.OrderItem, error)
 }
 
 func GetOrder(orderId int) ([]types.OrderItem, error) {
-	rows, err := DB.Query(`select orders.order_id, customer_id, tables.table_id, extra_instructions, order_status, total_amount, order_at_time, items.item_id, qty, category_id, item_name, item_description, img_url, price, isVeg, items.isAvailable 
-                from orders 
-                JOIN tables 
-                ON tables.table_id = orders.table_id
-                JOIN users 
-                ON orders.customer_id = users.id
-                JOIN order_item
-                on orders.order_id = order_item.order_id
-                JOIN items
-                on items.item_id = order_item.item_id
-                WHERE orders.order_id = ?
-                ORDER BY orders.order_id DESC;`, orderId)
+	rows, err := DB.Query(`
+    SELECT orders.order_id, customer_id, tables.table_id, extra_instructions, order_status, total_amount, order_at_time,
+           items.item_id, qty, category_id, item_name, item_description, img_url, price, isVeg, items.isAvailable
+    FROM orders
+    JOIN tables ON tables.table_id = orders.table_id
+    JOIN users ON orders.customer_id = users.id
+    JOIN order_item ON orders.order_id = order_item.order_id
+    JOIN items ON items.item_id = order_item.item_id
+    WHERE orders.order_id = ?
+    ORDER BY orders.order_id DESC;
+`, orderId)
 	var OrderList []types.OrderItem
 	if err != nil {
 		fmt.Println("Error Fetching Order")
@@ -166,71 +179,101 @@ func GetOrder(orderId int) ([]types.OrderItem, error) {
 
 // Order Status Change
 func MarkOrderPlacedById(orderID int) error {
-	_, err := DB.Exec(`update orders
-                    set order_status = 'placed'
-                    where order_id  = ?;`, orderID)
+	_, err := DB.Exec(`
+    UPDATE orders
+    SET order_status = 'placed'
+    WHERE order_id = ?;
+`, orderID)
 	if err != nil {
 		fmt.Println("Couldn't change state of Order")
 		return err
 	}
 	var tableID int
-	DB.QueryRow(`select table_id from orders where order_id = ?`, orderID).Scan(&tableID)
+	DB.QueryRow(`
+    SELECT table_id
+    FROM orders
+    WHERE order_id = ?
+`, orderID).Scan(&tableID)
 	// Update Table Status
 	SetTable(tableID, 0)
 	return nil
 }
 func MarkOrderCookingById(orderID int) error {
-	_, err := DB.Exec(`update orders
-                    set order_status = 'cooking'
-                    where order_id  = ?;`, orderID)
+	_, err := DB.Exec(`
+    UPDATE orders
+    SET order_status = 'cooking'
+    WHERE order_id = ?;
+`, orderID)
 	if err != nil {
 		fmt.Println("Couldn't change state of Order")
 		return err
 	}
 	var tableID int
-	DB.QueryRow(`select table_id from orders where order_id = ?`, orderID).Scan(&tableID)
+	DB.QueryRow(`
+    SELECT table_id
+    FROM orders
+    WHERE order_id = ?
+`, orderID).Scan(&tableID)
 	// Update Table Status
 	SetTable(tableID, 0)
 	return nil
 }
 func MarkOrderServedById(orderID int) error {
-	_, err := DB.Exec(`update orders
-                    set order_status = 'served'
-                    where order_id  = ?;`, orderID)
+	_, err := DB.Exec(`
+    UPDATE orders
+    SET order_status = 'served'
+    WHERE order_id = ?;
+`, orderID)
 	if err != nil {
 		fmt.Println("Couldn't change state of Order")
 		return err
 	}
 	var tableID int
-	DB.QueryRow(`select table_id from orders where order_id = ?`, orderID).Scan(&tableID)
+	DB.QueryRow(`
+    SELECT table_id
+    FROM orders
+    WHERE order_id = ?
+`, orderID).Scan(&tableID)
 	// Update Table Status
 	SetTable(tableID, 1)
 	return nil
 }
 func MarkOrderBilledById(orderID int) error {
-	_, err := DB.Exec(`update orders
-                    set order_status = 'billed'
-                    where order_id  = ?;`, orderID)
+	_, err := DB.Exec(`
+    UPDATE orders
+    SET order_status = 'billed'
+    WHERE order_id = ?;
+`, orderID)
 	if err != nil {
 		fmt.Println("Couldn't change state of Order")
 		return err
 	}
 	var tableID int
-	DB.QueryRow(`select table_id from orders where order_id = ?`, orderID).Scan(&tableID)
+	DB.QueryRow(`
+    SELECT table_id
+    FROM orders
+    WHERE order_id = ?
+`, orderID).Scan(&tableID)
 	// Update Table Status
 	SetTable(tableID, 0)
 	return nil
 }
 func MarkOrderPaidById(orderID int) error {
-	_, err := DB.Exec(`update orders
-                    set order_status = 'paid'
-                    where order_id  = ?;`, orderID)
+	_, err := DB.Exec(`
+    UPDATE orders
+    SET order_status = 'paid'
+    WHERE order_id = ?;
+`, orderID)
 	if err != nil {
 		fmt.Println("Couldn't change state of Order")
 		return err
 	}
 	var tableID int
-	DB.QueryRow(`select table_id from orders where order_id = ?`, orderID).Scan(&tableID)
+	DB.QueryRow(`
+    SELECT table_id
+    FROM orders
+    WHERE order_id = ?
+`, orderID).Scan(&tableID)
 	// Update Table Status
 	SetTable(tableID, 1)
 	return nil
@@ -238,9 +281,11 @@ func MarkOrderPaidById(orderID int) error {
 
 // Table
 func AvailableTables() ([]Table, error) {
-	rows, _ := DB.Query(`select table_id, isAvailable
-                from tables 
-                where isAvailable=1`)
+	rows, _ := DB.Query(`
+    SELECT table_id, isAvailable
+    FROM tables
+    WHERE isAvailable = 1
+`)
 	var tables []Table
 	for rows.Next() {
 		var temp Table
@@ -251,7 +296,11 @@ func AvailableTables() ([]Table, error) {
 	return tables, nil
 }
 func SetTable(table_id int, IsAvailable int) error {
-	_, err := DB.Exec(`update tables set isAvailable= ? where table_id=?`, IsAvailable, table_id)
+	_, err := DB.Exec(`
+    UPDATE tables
+    SET isAvailable = ?
+    WHERE table_id = ?
+`, IsAvailable, table_id)
 	if err != nil {
 		fmt.Println("Error Setting table")
 		return err
@@ -261,9 +310,11 @@ func SetTable(table_id int, IsAvailable int) error {
 
 // Items
 func GetItems(idString string) ([]Item, error) {
-	q := fmt.Sprintf(`select item_id, items.category_id, item_name, item_description, img_url, price, isVeg 
-                    from items
-                    where item_id in ( %s )`, idString)
+	q := fmt.Sprintf(`
+    SELECT item_id, items.category_id, item_name, item_description, img_url, price, isVeg
+    FROM items
+    WHERE item_id IN (%s)
+`, idString)
 	rows, _ := DB.Query(q)
 	var ItemList []Item
 
