@@ -16,16 +16,16 @@ func HandleRegisterUser(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	hashpwd := hashing.GenerateHashFromPassword(r.FormValue("password"))
 	user := types.User{
-		Username:   r.FormValue("username"),
-		Email:      r.FormValue("email"),
-		First_name: r.FormValue("first_name"),
-		Last_name:  r.FormValue("last_name"),
-		Contact:    r.FormValue("contact"),
-		Hashpwd:    hashpwd,
-		Userole:    types.ROLE().CUSTOMER,
+		Username:  r.FormValue("username"),
+		Email:     r.FormValue("email"),
+		FirstName: r.FormValue("first_name"),
+		LastName:  r.FormValue("last_name"),
+		Contact:   r.FormValue("contact"),
+		Hashpwd:   hashpwd,
+		Userole:   types.ROLE().CUSTOMER,
 	}
 
-	if user.Username == "" || user.Email == "" || user.First_name == "" || user.Last_name == "" || user.Contact == "" || user.Hashpwd == "" {
+	if user.Username == "" || user.Email == "" || user.FirstName == "" || user.LastName == "" || user.Contact == "" || user.Hashpwd == "" {
 		fmt.Println("Bad user input")
 		RenderRegister(w, r)
 		// TODO: How to pass message to the front end?

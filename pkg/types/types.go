@@ -1,14 +1,14 @@
 package types
 
 type User struct {
-	UserId     int
-	Username   string
-	Email      string
-	First_name string
-	Last_name  string
-	Contact    string
-	Hashpwd    string
-	Userole    string
+	UserId    int
+	Username  string
+	Email     string
+	FirstName string
+	LastName  string
+	Contact   string
+	Hashpwd   string
+	Userole   string
 }
 
 //
@@ -57,7 +57,6 @@ type Order_table_id struct {
 type OrderID struct{}
 type TableID struct{}
 
-//
 type Category struct {
 	Category_id   int
 	Category_name string
@@ -75,7 +74,6 @@ type Item struct {
 	IsAvailable      bool
 }
 
-//
 type Cart struct {
 	Id   int
 	Qty  int

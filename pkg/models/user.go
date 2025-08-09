@@ -56,7 +56,7 @@ func AddUser(user types.User) error {
 	_, err := DB.Exec(`
     INSERT INTO users (email, username, userRole, first_name, last_name, contact, hashpwd)
     VALUES (?, ?, ?, ?, ?, ?, ?)
-`, user.Email, user.Username, user.Userole, user.First_name, user.Last_name, user.Contact, user.Hashpwd)
+`, user.Email, user.Username, user.Userole, user.FirstName, user.LastName, user.Contact, user.Hashpwd)
 	if err != nil {
 		return err
 	}
@@ -72,7 +72,7 @@ func GetAllUsers() ([]types.User, error) {
 `)
 	for rows.Next() {
 		var DbUser types.User
-		rows.Scan(&DbUser.UserId, &DbUser.Email, &DbUser.Username, &DbUser.First_name, &DbUser.Last_name, &DbUser.Contact, &DbUser.Hashpwd, &DbUser.Userole)
+		rows.Scan(&DbUser.UserId, &DbUser.Email, &DbUser.Username, &DbUser.FirstName, &DbUser.LastName, &DbUser.Contact, &DbUser.Hashpwd, &DbUser.Userole)
 		AllUsers = append(AllUsers, DbUser)
 	}
 	return AllUsers, nil
@@ -84,7 +84,7 @@ func GetUser(user types.User) (types.User, error) {
     SELECT id, email, username, first_name, last_name, contact, hashpwd, userRole
     FROM users
     WHERE email = ?
-`, user.Email).Scan(&DbUser.UserId, &DbUser.Email, &DbUser.Username, &DbUser.First_name, &DbUser.Last_name, &DbUser.Contact, &DbUser.Hashpwd, &DbUser.Userole)
+`, user.Email).Scan(&DbUser.UserId, &DbUser.Email, &DbUser.Username, &DbUser.FirstName, &DbUser.LastName, &DbUser.Contact, &DbUser.Hashpwd, &DbUser.Userole)
 	if err != nil {
 		return DbUser, err
 	}

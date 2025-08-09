@@ -46,6 +46,6 @@ func Start() {
 	routers.RegisterAuthRouter(AuthRouter)
 
 	PORT := config.PORT
-	fmt.Println("Server starting running on port: 8000")
+	fmt.Printf("Server starting running on port: %v\n", PORT)
 	http.ListenAndServe(fmt.Sprintf(":%v", PORT), r)
 }

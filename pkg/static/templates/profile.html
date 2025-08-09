@@ -14,7 +14,7 @@
             {{ if .User }}
             <h5>username: {{.User.Username}}</h5>
             <h5>email: {{.User.Email}}</h5>
-            <h5>full name: {{.User.First_name}} {{.User.Last_name}}</h5>
+            <h5>full name: {{.User.FirstName}} {{.User.LastName}}</h5>
             {{ if ne .User.Userole "customer"}}
             <h5>Role: {{.User.Userole}}
             </h5>
