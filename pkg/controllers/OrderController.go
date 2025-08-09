@@ -15,6 +15,7 @@ import (
 func HandleGetOrder(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode("See All order!")
 }
+
 func HandlePostOrder(w http.ResponseWriter, r *http.Request) {
 	var jsonResponse types.OrderRequest
 	_ = json.NewDecoder(r.Body).Decode(&jsonResponse)
@@ -52,6 +53,7 @@ func HandleOrderPlaced(w http.ResponseWriter, r *http.Request) {
 	}
 	json.NewEncoder(w).Encode(res)
 }
+
 func HandleOrderCooking(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	orderID, _ := strconv.Atoi(vars["id"])
@@ -61,6 +63,7 @@ func HandleOrderCooking(w http.ResponseWriter, r *http.Request) {
 	}
 	json.NewEncoder(w).Encode(res)
 }
+
 func HandleOrderServed(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	orderID, _ := strconv.Atoi(vars["id"])
@@ -70,6 +73,7 @@ func HandleOrderServed(w http.ResponseWriter, r *http.Request) {
 	}
 	json.NewEncoder(w).Encode(res)
 }
+
 func HandleOrderBilled(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	orderID, _ := strconv.Atoi(vars["id"])
@@ -79,6 +83,7 @@ func HandleOrderBilled(w http.ResponseWriter, r *http.Request) {
 	}
 	json.NewEncoder(w).Encode(res)
 }
+
 func HandleOrderPaid(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	orderID, _ := strconv.Atoi(vars["id"])

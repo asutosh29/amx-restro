@@ -9,84 +9,6 @@ import (
 	"github.com/asutosh29/amx-restro/pkg/types"
 )
 
-func AddOrder(instruction string, cart []types.CartItem, user types.User) (int, int) {
-	// Get User ID
-	userID := user.UserId
-
-	// Get Table ID
-	tables, _ := AvailableTables()
-
-	var table_id int
-	if len(tables) != 0 {
-		table_id = tables[0].Table_id
-	}
-
-	err := SetTable(table_id, 0)
-	if err != nil {
-		fmt.Println("Error setting table")
-		fmt.Println(err)
-	}
-	// Format Time in Correct Format
-	order_at_time := time.Now().Format("2006-01-02 15:04:05")
-
-	// Calculate Total Amount
-	totalAmount := GetTotalAmount(cart)
-
-	// Insert into DB
-	result, err := DB.Exec(`
-    INSERT INTO orders (customer_id, table_id, extra_instructions, total_amount, order_at_time)
-    VALUES (?, ?, ?, ?, ?)
-`, userID, table_id, instruction, totalAmount, order_at_time)
-	if err != nil {
-		fmt.Println("Error placing order")
-		fmt.Println(err)
-		return -1, -1
-	}
-
-	orderID, _ := result.LastInsertId()
-
-	for _, it_qt := range cart {
-		DB.Exec(`
-    INSERT INTO order_item (item_id, order_id, qty)
-    VALUES (?, ?, ?)
-`, it_qt.ID, orderID, it_qt.Qty)
-	}
-	return int(orderID), table_id
-}
-
-func GetTotalAmount(cart []types.CartItem) float32 {
-	// Extract item IDs from the input to query the database.
-	var itemIDs []string
-	for _, item := range cart {
-		itemIDs = append(itemIDs, fmt.Sprintf("%v", item.ID))
-	}
-	idString := strings.Join(itemIDs, ",")
-
-	// Fetch item prices from the database.
-	items, err := GetItems(idString)
-	if err != nil {
-		fmt.Println("Error fetching items from DB")
-		fmt.Println(err)
-	}
-
-	// Calculate total amount
-	var totalAmount float32
-	for _, e := range cart {
-		for _, item := range items {
-			ordered_qty := float32(e.Qty)
-			var price float32
-			ID, _ := strconv.Atoi(e.ID)
-			if item.Item_id == ID {
-				price = float32(item.Price)
-			} else {
-				price = 0
-			}
-			totalAmount += float32(ordered_qty) * float32(price)
-		}
-	}
-	return totalAmount
-}
-
 func GetAllOrdersByOrder() ([][]types.OrderItem, error) {
 	var IdList []int
 	var OrderList [][]types.OrderItem
@@ -172,6 +94,84 @@ func GetOrder(orderId int) ([]types.OrderItem, error) {
 	return OrderList, nil
 }
 
+func AddOrder(instruction string, cart []types.CartItem, user types.User) (int, int) {
+	// Get User ID
+	userID := user.UserId
+
+	// Get Table ID
+	tables, _ := AvailableTables()
+
+	var table_id int
+	if len(tables) != 0 {
+		table_id = tables[0].Table_id
+	}
+
+	err := SetTable(table_id, 0)
+	if err != nil {
+		fmt.Println("Error setting table")
+		fmt.Println(err)
+	}
+	// Format Time in Correct Format
+	order_at_time := time.Now().Format("2006-01-02 15:04:05")
+
+	// Calculate Total Amount
+	totalAmount := GetTotalAmount(cart)
+
+	// Insert into DB
+	result, err := DB.Exec(`
+    INSERT INTO orders (customer_id, table_id, extra_instructions, total_amount, order_at_time)
+    VALUES (?, ?, ?, ?, ?)
+`, userID, table_id, instruction, totalAmount, order_at_time)
+	if err != nil {
+		fmt.Println("Error placing order")
+		fmt.Println(err)
+		return -1, -1
+	}
+
+	orderID, _ := result.LastInsertId()
+
+	for _, it_qt := range cart {
+		DB.Exec(`
+    INSERT INTO order_item (item_id, order_id, qty)
+    VALUES (?, ?, ?)
+`, it_qt.ID, orderID, it_qt.Qty)
+	}
+	return int(orderID), table_id
+}
+
+func GetTotalAmount(cart []types.CartItem) float32 {
+	// Extract item IDs from the input to query the database.
+	var itemIDs []string
+	for _, item := range cart {
+		itemIDs = append(itemIDs, fmt.Sprintf("%v", item.ID))
+	}
+	idString := strings.Join(itemIDs, ",")
+
+	// Fetch item prices from the database.
+	items, err := GetItems(idString)
+	if err != nil {
+		fmt.Println("Error fetching items from DB")
+		fmt.Println(err)
+	}
+
+	// Calculate total amount
+	var totalAmount float32
+	for _, e := range cart {
+		for _, item := range items {
+			ordered_qty := float32(e.Qty)
+			var price float32
+			ID, _ := strconv.Atoi(e.ID)
+			if item.Item_id == ID {
+				price = float32(item.Price)
+			} else {
+				price = 0
+			}
+			totalAmount += float32(ordered_qty) * float32(price)
+		}
+	}
+	return totalAmount
+}
+
 // Order Status Change
 func MarkOrderPlacedById(orderID int) error {
 	_, err := DB.Exec(`
@@ -193,6 +193,7 @@ func MarkOrderPlacedById(orderID int) error {
 	SetTable(tableID, 0)
 	return nil
 }
+
 func MarkOrderCookingById(orderID int) error {
 	_, err := DB.Exec(`
     UPDATE orders
@@ -213,6 +214,7 @@ func MarkOrderCookingById(orderID int) error {
 	SetTable(tableID, 0)
 	return nil
 }
+
 func MarkOrderServedById(orderID int) error {
 	_, err := DB.Exec(`
     UPDATE orders
@@ -233,6 +235,7 @@ func MarkOrderServedById(orderID int) error {
 	SetTable(tableID, 1)
 	return nil
 }
+
 func MarkOrderBilledById(orderID int) error {
 	_, err := DB.Exec(`
     UPDATE orders
@@ -253,6 +256,7 @@ func MarkOrderBilledById(orderID int) error {
 	SetTable(tableID, 0)
 	return nil
 }
+
 func MarkOrderPaidById(orderID int) error {
 	_, err := DB.Exec(`
     UPDATE orders
@@ -272,56 +276,4 @@ func MarkOrderPaidById(orderID int) error {
 	// Update Table Status
 	SetTable(tableID, 1)
 	return nil
-}
-
-// Table
-func AvailableTables() ([]types.Table, error) {
-	rows, _ := DB.Query(`
-    SELECT table_id, isAvailable
-    FROM tables
-    WHERE isAvailable = 1
-`)
-	var tables []types.Table
-	for rows.Next() {
-		var temp types.Table
-		rows.Scan(&temp.Table_id, &temp.IsAvailable)
-		tables = append(tables, temp)
-	}
-
-	return tables, nil
-}
-func SetTable(table_id int, IsAvailable int) error {
-	_, err := DB.Exec(`
-    UPDATE tables
-    SET isAvailable = ?
-    WHERE table_id = ?
-`, IsAvailable, table_id)
-	if err != nil {
-		fmt.Println("Error Setting table")
-		return err
-	}
-	return nil
-}
-
-// Items
-func GetItems(idString string) ([]types.Item, error) {
-	q := fmt.Sprintf(`
-    SELECT item_id, items.category_id, item_name, item_description, img_url, price, isVeg
-    FROM items
-    WHERE item_id IN (%s)
-`, idString)
-	rows, _ := DB.Query(q)
-	var ItemList []types.Item
-
-	for rows.Next() {
-		var temp types.Item
-		err := rows.Scan(&temp.Item_id, &temp.Category_id, &temp.Item_name, &temp.Item_description, &temp.Img_url, &temp.Price, &temp.IsVeg)
-		if err != nil {
-			fmt.Println("Error adding item by category")
-			fmt.Println(err)
-			return []types.Item{}, err
-		}
-		ItemList = append(ItemList, temp)
-	}
-	return ItemList, nil
 }
