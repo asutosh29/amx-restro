@@ -91,21 +91,6 @@ func GetUser(user types.User) (types.User, error) {
 	return DbUser, nil
 }
 
-func GertUserId(user types.User) (int, error) {
-	var UserId int
-	err := DB.QueryRow(`
-    SELECT id
-    FROM users
-    WHERE email = ?
-`, user.Email).Scan(&UserId)
-	print()
-	if err != nil {
-		return -1, err
-
-	}
-	return UserId, nil
-}
-
 func MakeAdminById(userId int) (int, error) {
 	_, err := DB.Exec(`
     UPDATE users

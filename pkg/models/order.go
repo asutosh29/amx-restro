@@ -11,7 +11,7 @@ import (
 
 func AddOrder(instruction string, cart []types.CartItem, user types.User) (int, int) {
 	// Get User ID
-	userID, _ := GertUserId(user)
+	userID := user.UserId
 
 	// Get Table ID
 	tables, _ := AvailableTables()
