@@ -8,12 +8,18 @@ import (
 
 // Table
 func AvailableTables() ([]types.Table, error) {
-	rows, _ := DB.Query(`
+	rows, err := DB.Query(`
     SELECT table_id, isAvailable
     FROM tables
     WHERE isAvailable = 1
 `)
 	var tables []types.Table
+	if err != nil {
+		fmt.Println("Error Fetching Tables")
+		fmt.Println(err)
+		return nil, err
+	}
+
 	for rows.Next() {
 		var temp types.Table
 		rows.Scan(&temp.Table_id, &temp.IsAvailable)

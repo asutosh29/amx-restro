@@ -31,7 +31,7 @@ func LoggedIn(next http.Handler) http.Handler {
 		claims, err := jwt_utils.ValidateJWT(jwt_token)
 		if err != nil {
 			fmt.Println("Error validating JWT")
-			next.ServeHTTP(w, r)
+			http.Redirect(w, r, "/login", http.StatusSeeOther)
 		}
 
 		// TODO: Store User in context for Frontend

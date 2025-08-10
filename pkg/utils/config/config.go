@@ -30,11 +30,26 @@ func InitConfig() {
 	// Load Env
 	godotenv.Load()
 
-	Db_config.DbHost = os.Getenv("MYSQL_HOST")
-	Db_config.DbUser = os.Getenv("MYSQL_USER")
-	Db_config.DbPassword = os.Getenv("MYSQL_PASSWORD")
-	Db_config.Database = os.Getenv("MYSQL_DATABASE")
-	Db_config.DbPort = os.Getenv("MYSQL_PORT")
+	if host := os.Getenv("MYSQL_HOST"); host != "" {
+		Db_config.DbHost = host
+	}
+	if user := os.Getenv("MYSQL_USER"); user != "" {
+		Db_config.DbUser = user
+	}
+	if password := os.Getenv("MYSQL_PASSWORD"); password != "" {
+		Db_config.DbPassword = password
+	}
+	if database := os.Getenv("MYSQL_DATABASE"); database != "" {
+		Db_config.Database = database
+	}
+	if port := os.Getenv("MYSQL_PORT"); port != "" {
+		Db_config.DbPort = port
+	}
+	// Db_config.DbHost = os.Getenv("MYSQL_HOST")
+	// Db_config.DbUser = os.Getenv("MYSQL_USER")
+	// Db_config.DbPassword = os.Getenv("MYSQL_PASSWORD")
+	// Db_config.Database = os.Getenv("MYSQL_DATABASE")
+	// Db_config.DbPort = os.Getenv("MYSQL_PORT")
 
 	ValidCategories = []string{
 		"Appetizers",

@@ -74,12 +74,14 @@ func GetOrder(orderId int) ([]types.OrderItem, error) {
     WHERE orders.order_id = ?
     ORDER BY orders.order_id DESC;
 `, orderId)
+
 	var OrderList []types.OrderItem
 	if err != nil {
 		fmt.Println("Error Fetching Order")
 		fmt.Println(err)
 		return OrderList, err
 	}
+
 	for rows.Next() {
 		var tempOrderItem types.OrderItem
 		err := rows.Scan(&tempOrderItem.OrderID, &tempOrderItem.CustomerID, &tempOrderItem.TableID, &tempOrderItem.Extra_instructions, &tempOrderItem.Order_status, &tempOrderItem.Total_amount, &tempOrderItem.Order_at_time, &tempOrderItem.ItemID, &tempOrderItem.Qty, &tempOrderItem.CategoryID, &tempOrderItem.ItemName, &tempOrderItem.ItemDescription, &tempOrderItem.ImageURL, &tempOrderItem.Price, &tempOrderItem.IsVeg, &tempOrderItem.IsAvailable)
@@ -99,17 +101,23 @@ func AddOrder(instruction string, cart []types.CartItem, user types.User) (int, 
 	userID := user.UserId
 
 	// Get Table ID
-	tables, _ := AvailableTables()
+	tables, err := AvailableTables()
+	if err != nil {
+		fmt.Println("Error fetching tables")
+		fmt.Println(err)
+		return -1, -1
+	}
 
 	var table_id int
 	if len(tables) != 0 {
 		table_id = tables[0].Table_id
 	}
 
-	err := SetTable(table_id, 0)
+	err = SetTable(table_id, 0)
 	if err != nil {
 		fmt.Println("Error setting table")
 		fmt.Println(err)
+		return -1, -1
 	}
 	// Format Time in Correct Format
 	order_at_time := time.Now().Format("2006-01-02 15:04:05")
@@ -174,7 +182,7 @@ func GetTotalAmount(cart []types.CartItem) float32 {
 
 // Order Status Change
 func MarkOrderPlacedById(orderID int) error {
-	_, err := DB.Exec(`
+	result, err := DB.Exec(`
     UPDATE orders
     SET order_status = 'placed'
     WHERE order_id = ?;
@@ -183,19 +191,34 @@ func MarkOrderPlacedById(orderID int) error {
 		fmt.Println("Couldn't change state of Order")
 		return err
 	}
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		fmt.Println("Error getting rows affected for MarkOrderPlacedById")
+		return err
+	}
+	if rowsAffected == 0 {
+		return fmt.Errorf("no order found with id %d", orderID)
+	}
 	var tableID int
-	DB.QueryRow(`
+	err = DB.QueryRow(`
     SELECT table_id
     FROM orders
     WHERE order_id = ?
 `, orderID).Scan(&tableID)
+	if err != nil {
+		fmt.Println("Error fetching table_id in MarkOrderPlacedById")
+		return err
+	}
 	// Update Table Status
-	SetTable(tableID, 0)
+	if err := SetTable(tableID, 0); err != nil {
+		fmt.Println("Error updating table status in MarkOrderPlacedById")
+		return err
+	}
 	return nil
 }
 
 func MarkOrderCookingById(orderID int) error {
-	_, err := DB.Exec(`
+	result, err := DB.Exec(`
     UPDATE orders
     SET order_status = 'cooking'
     WHERE order_id = ?;
@@ -204,19 +227,34 @@ func MarkOrderCookingById(orderID int) error {
 		fmt.Println("Couldn't change state of Order")
 		return err
 	}
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		fmt.Println("Error getting rows affected for MarkOrderCookingById")
+		return err
+	}
+	if rowsAffected == 0 {
+		return fmt.Errorf("no order found with id %d", orderID)
+	}
 	var tableID int
-	DB.QueryRow(`
+	err = DB.QueryRow(`
     SELECT table_id
     FROM orders
     WHERE order_id = ?
 `, orderID).Scan(&tableID)
+	if err != nil {
+		fmt.Println("Error fetching table_id in MarkOrderCookingById")
+		return err
+	}
 	// Update Table Status
-	SetTable(tableID, 0)
+	if err := SetTable(tableID, 0); err != nil {
+		fmt.Println("Error updating table status in MarkOrderCookingById")
+		return err
+	}
 	return nil
 }
 
 func MarkOrderServedById(orderID int) error {
-	_, err := DB.Exec(`
+	result, err := DB.Exec(`
     UPDATE orders
     SET order_status = 'served'
     WHERE order_id = ?;
@@ -225,19 +263,34 @@ func MarkOrderServedById(orderID int) error {
 		fmt.Println("Couldn't change state of Order")
 		return err
 	}
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		fmt.Println("Error getting rows affected for MarkOrderServedById")
+		return err
+	}
+	if rowsAffected == 0 {
+		return fmt.Errorf("no order found with id %d", orderID)
+	}
 	var tableID int
-	DB.QueryRow(`
+	err = DB.QueryRow(`
     SELECT table_id
     FROM orders
     WHERE order_id = ?
 `, orderID).Scan(&tableID)
+	if err != nil {
+		fmt.Println("Error fetching table_id in MarkOrderServedById")
+		return err
+	}
 	// Update Table Status
-	SetTable(tableID, 1)
+	if err := SetTable(tableID, 1); err != nil {
+		fmt.Println("Error updating table status in MarkOrderServedById")
+		return err
+	}
 	return nil
 }
 
 func MarkOrderBilledById(orderID int) error {
-	_, err := DB.Exec(`
+	result, err := DB.Exec(`
     UPDATE orders
     SET order_status = 'billed'
     WHERE order_id = ?;
@@ -246,19 +299,34 @@ func MarkOrderBilledById(orderID int) error {
 		fmt.Println("Couldn't change state of Order")
 		return err
 	}
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		fmt.Println("Error getting rows affected for MarkOrderBilledById")
+		return err
+	}
+	if rowsAffected == 0 {
+		return fmt.Errorf("no order found with id %d", orderID)
+	}
 	var tableID int
-	DB.QueryRow(`
+	err = DB.QueryRow(`
     SELECT table_id
     FROM orders
     WHERE order_id = ?
 `, orderID).Scan(&tableID)
+	if err != nil {
+		fmt.Println("Error fetching table_id in MarkOrderBilledById")
+		return err
+	}
 	// Update Table Status
-	SetTable(tableID, 0)
+	if err := SetTable(tableID, 0); err != nil {
+		fmt.Println("Error updating table status in MarkOrderBilledById")
+		return err
+	}
 	return nil
 }
 
 func MarkOrderPaidById(orderID int) error {
-	_, err := DB.Exec(`
+	result, err := DB.Exec(`
     UPDATE orders
     SET order_status = 'paid'
     WHERE order_id = ?;
@@ -267,13 +335,28 @@ func MarkOrderPaidById(orderID int) error {
 		fmt.Println("Couldn't change state of Order")
 		return err
 	}
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		fmt.Println("Error getting rows affected for MarkOrderPaidById")
+		return err
+	}
+	if rowsAffected == 0 {
+		return fmt.Errorf("no order found with id %d", orderID)
+	}
 	var tableID int
-	DB.QueryRow(`
+	err = DB.QueryRow(`
     SELECT table_id
     FROM orders
     WHERE order_id = ?
 `, orderID).Scan(&tableID)
+	if err != nil {
+		fmt.Println("Error fetching table_id in MarkOrderPaidById")
+		return err
+	}
 	// Update Table Status
-	SetTable(tableID, 1)
+	if err := SetTable(tableID, 1); err != nil {
+		fmt.Println("Error updating table status in MarkOrderPaidById")
+		return err
+	}
 	return nil
 }

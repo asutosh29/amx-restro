@@ -66,10 +66,14 @@ func AddUser(user types.User) error {
 
 func GetAllUsers() ([]types.User, error) {
 	var AllUsers []types.User
-	rows, _ := DB.Query(`
+	rows, err := DB.Query(`
     SELECT id, email, username, first_name, last_name, contact, hashpwd, userRole
     FROM users
 `)
+	if err != nil {
+		return AllUsers, err
+	}
+	defer rows.Close()
 	for rows.Next() {
 		var DbUser types.User
 		rows.Scan(&DbUser.UserId, &DbUser.Email, &DbUser.Username, &DbUser.FirstName, &DbUser.LastName, &DbUser.Contact, &DbUser.Hashpwd, &DbUser.Userole)

@@ -27,7 +27,7 @@ func HandleRegisterUser(w http.ResponseWriter, r *http.Request) {
 
 	if user.Username == "" || user.Email == "" || user.FirstName == "" || user.LastName == "" || user.Contact == "" || user.Hashpwd == "" {
 		fmt.Println("Bad user input")
-		RenderRegister(w, r)
+		http.Redirect(w, r, "/register", http.StatusSeeOther)
 		// TODO: How to pass message to the front end?
 		// NOTE: Store in local storage and render it on Front end from there! or try cookies.
 		return
@@ -47,6 +47,8 @@ func HandleRegisterUser(w http.ResponseWriter, r *http.Request) {
 	if val, err := models.IsEmailUnique(user); err != nil {
 		fmt.Println("Email check error")
 		fmt.Println(err)
+		http.Redirect(w, r, "/register", http.StatusSeeOther)
+		return
 	} else {
 		if !val {
 			fmt.Println("Email Already exists!")
@@ -58,11 +60,13 @@ func HandleRegisterUser(w http.ResponseWriter, r *http.Request) {
 	if val, err := models.IsUserNameUnique(user); err != nil {
 		fmt.Println("Username check error")
 		fmt.Println(err)
+		http.Redirect(w, r, "/register", http.StatusSeeOther)
+		return
 	} else {
 		if !val {
 			fmt.Println("Username Already exists!")
 			// TODO: Flash messages for frontend
-			RenderRegister(w, r)
+			http.Redirect(w, r, "/register", http.StatusSeeOther)
 			return
 		}
 	}
@@ -71,7 +75,7 @@ func HandleRegisterUser(w http.ResponseWriter, r *http.Request) {
 	err := models.AddUser(user)
 	if err != nil {
 		fmt.Println("Error adding user to Database")
-		RenderRegister(w, r)
+		http.Redirect(w, r, "/register", http.StatusSeeOther)
 		return
 	}
 	// TODO: Flash - User registered successfully
@@ -87,7 +91,7 @@ func HandleLoginUser(w http.ResponseWriter, r *http.Request) {
 
 	if user.Email == "" || r.FormValue("password") == "" {
 		fmt.Println("Bad user input")
-		RenderRegister(w, r)
+		http.Redirect(w, r, "/login", http.StatusSeeOther)
 		// TODO: How to pass message to the front end?
 		// NOTE: Store in local storage and render it on Front end from there! or try cookies.
 		return
@@ -96,12 +100,13 @@ func HandleLoginUser(w http.ResponseWriter, r *http.Request) {
 	if val, err := models.IsEmailUnique(user); err != nil {
 		fmt.Println("Email check error")
 		fmt.Println(err)
-
+		http.Redirect(w, r, "/register", http.StatusSeeOther)
+		return
 	} else {
 		if val {
 			fmt.Println("Email Already exists!")
 			// TODO: Flash messages for frontend
-			RenderRegister(w, r)
+			http.Redirect(w, r, "/register", http.StatusSeeOther)
 			return
 		}
 
@@ -113,12 +118,14 @@ func HandleLoginUser(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println("Error retrieving user")
 		fmt.Println(err)
+		http.Redirect(w, r, "/login", http.StatusSeeOther)
+		return
 	}
 
 	// Check Password
 	if validPassword := hashing.CheckPasswordFromHash(RealUser.Hashpwd, r.FormValue("password")); !validPassword {
 		// TODO: Flash message - Invalid Password
-		RenderLogin(w, r)
+		http.Redirect(w, r, "/login", http.StatusSeeOther)
 		return
 	}
 
@@ -126,7 +133,7 @@ func HandleLoginUser(w http.ResponseWriter, r *http.Request) {
 	token_JWT, err := jwt_utils.GenerateJWT(RealUser)
 	if err != nil {
 		fmt.Println("Error Generating JWT token")
-		RenderLogin(w, r)
+		http.Redirect(w, r, "/login", http.StatusSeeOther)
 		return
 	}
 

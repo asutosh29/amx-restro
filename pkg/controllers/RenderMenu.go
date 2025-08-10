@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/asutosh29/amx-restro/pkg/types"
 	"github.com/asutosh29/amx-restro/pkg/models"
+	"github.com/asutosh29/amx-restro/pkg/types"
 	"github.com/asutosh29/amx-restro/pkg/views"
 )
 
