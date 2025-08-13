@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {{ template "Head" .}}
+    <title>Restro | Admin </title>
+</head>
+
+<body>
+    <div class="container mt-5">
+        {{ template "Navbar" .}}
+        <h1>Admin page</h1>
+        <h2>Manage All Users</h2>
+        <div class="container d-flex flex-wrap">
+            {{ $root := . }}
+            {{ range $i, $u := .Users }}
+            <div class="card card-box m-3">
+                <div class="card-header">
+                    {{$u.Username}}
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Fullname: {{$u.FirstName}} {{$u.LastName}}
+                    </li>
+                    <li class="list-group-item">Contact: {{$u.Contact}}
+                    </li>
+                    <li class="list-group-item">userID: {{$u.UserId}}
+                    </li>
+                    <li class="list-group-item">userRole: {{$u.Userole}}
+                    </li>
+                </ul>
+                <div class="container">
+                    <!-- <button class="btn btn-primary delete" type="submit" id="{{$u.UserId}}">Delete
+                                user</button> -->
+                    <!-- !!!!!! help: Unable to use .User object when inside a for loop !!!!!!! -->
+                    {{if eq $root.User.Userole "super"}}
+
+                    {{if ne $u.Userole "super"}}
+                    {{if ne $u.Userole "admin"}}
+                    <button class="btn btn-primary admin" type="submit" id="{{$u.UserId}}">Make Admin
+                        user</button>
+                    {{else}}
+                    <button class="btn btn-primary adminRevoke" type="submit" id="{{$u.UserId}}">Remove Admin
+                        user</button>
+                    {{end}}
+                    {{end}}
+
+
+                    {{end}}
+                </div>
+            </div>
+
+            {{end}}
+        </div>
+    </div>
+
+    {{template "Bootstrap" .}}
+    <script>
+        let deleteBtns = document.getElementsByClassName('delete')
+        deleteBtns = Array(...deleteBtns)
+        deleteBtns.forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                fetch(`/user/${e.target.id}`, { method: 'DELETE' })
+                    .then(response => response.json())
+                    .then(response => {
+                    })
+                    .catch(error => {
+                        console.error(e)
+                    });
+            })
+        });
+
+        let adminBtns = document.getElementsByClassName('admin')
+        adminBtns = Array(...adminBtns)
+        adminBtns.forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                fetch(`/admin/${e.target.id}`, { method: 'PATCH' })
+                    .then(response => response.json())
+                    .then(response => {
+                        window.location.reload()
+                    })
+                    .catch(error => {
+                        console.error(e)
+                    });
+            })
+        });
+
+        let adminRevokeBtns = document.getElementsByClassName('adminRevoke')
+        adminRevokeBtns = Array(...adminRevokeBtns)
+        adminRevokeBtns.forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                fetch(`/admin/${e.target.id}`, { method: 'DELETE' })
+                    .then(response => response.json())
+                    .then(response => {
+
+                        window.location.reload()
+                    })
+                    .catch(error => {
+                        console.error(e)
+                    });
+            })
+        });
+
+    </script>
+</body>
+
+</html>

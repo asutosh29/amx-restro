@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {{template "Head" .}}
+    <title>Restro | Admin</title>
+    <style>
+        #admin-orders {
+            height: calc(100vh - 14rem);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container mt-6 d-flex flex-column align-items-center">
+        {{template "Navbar" .}}
+        {{template "AdminOrderCategories" .}}
+        <h1>Manage Orders</h1>
+        <div id="admin-orders" class="orders d-flex box-shadow flex-wrap justify-content-center overflow-x-scroll">
+            {{range .Orders}}
+            <!-- Render Order Card -->
+            {{ template "AdminOrderCard" . }}
+            {{ end }}
+
+        </div>
+        <div id="pageBtns" class="d-flex align-items-center justify-content-center">
+            <!-- Pagination Bar -->
+            </ul>
+        </div>
+    </div>
+
+    {{ template "Bootstrap" .}}
+    <script>
+        const servedBtns = Array(...document.getElementsByClassName('markServed'))
+        servedBtns.forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                const element = e.target
+                const orderId = element.id
+                const cookingBtn = document.querySelectorAll(`button[id="${orderId}"]`)[0]
+
+                if (element.classList.contains('btn-primary')) {
+
+                    await fetch(`/order/served/${orderId}`, {
+                        method: "PATCH"
+                    })
+                        .then(response => response.json())
+                        .then(response => {
+
+
+                            element.classList.remove('btn-primary')
+                            element.classList.add('btn-success')
+                            cookingBtn.classList.add('btn-primary')
+                            cookingBtn.classList.remove('btn-success')
+                            window.location.reload()
+                        })
+                        .catch(error => {
+                            console.error(e)
+                        });
+
+                }
+                else {
+
+                    await fetch(`/order/placed/${orderId}`, {
+                        method: "PATCH"
+                    })
+                        .then(response => response.json())
+                        .then(response => {
+
+                            element.classList.add('btn-primary')
+                            element.classList.remove('btn-success')
+                            window.location.reload()
+
+                        })
+                        .catch(error => {
+                            console.error(e)
+                        });
+
+                }
+
+            })
+        });
+        const cookingBtns = Array(...document.getElementsByClassName('markCooking'))
+        cookingBtns.forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                const element = e.target
+                const orderId = element.id
+
+                const servedBtn = document.querySelectorAll(`button[id="${orderId}"]`)[1]
+
+                if (element.classList.contains('btn-primary')) {
+
+                    await fetch(`/order/cooking/${orderId}`, {
+                        method: "PATCH"
+                    })
+                        .then(response => response.json())
+                        .then(response => {
+                            element.classList.remove('btn-primary')
+                            element.classList.add('btn-success')
+                            servedBtn.classList.add('btn-primary')
+                            servedBtn.classList.remove('btn-success')
+                            window.location.reload()
+                        })
+                        .catch(error => {
+                            console.error(e)
+                        });
+
+                }
+                else {
+
+                    await fetch(`/order/placed/${orderId}`, {
+                        method: "PATCH"
+                    })
+                        .then(response => response.json())
+                        .then(response => {
+                            element.classList.add('btn-primary')
+                            element.classList.remove('btn-success')
+                            window.location.reload()
+                        })
+                        .catch(error => {
+                            console.error(e)
+                        });
+
+                }
+
+            })
+        });
+        const billBtns = Array(...document.getElementsByClassName('markBill'))
+        billBtns.forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                const element = e.target
+                const orderId = element.id
+
+                const cookingBtn = document.querySelectorAll(`button[id="${orderId}"]`)[0]
+                const servedBtn = document.querySelectorAll(`button[id="${orderId}"]`)[1]
+
+                await fetch(`/order/bill/${orderId}`, {
+                    method: "PATCH"
+                })
+                    .then(response => response.json())
+                    .then(response => {
+                        element.classList.add('btn-success')
+                        element.classList.remove('btn-danger')
+                        cookingBtn.classList.add('btn-primary')
+                        cookingBtn.classList.remove('btn-success')
+                        servedBtn.classList.add('btn-primary')
+                        servedBtn.classList.remove('btn-success')
+                        window.location.reload()
+                    })
+                    .catch(error => {
+                        console.error(e)
+                    });
+
+
+
+
+            })
+        });
+        const paidBtns = Array(...document.getElementsByClassName('markPaid'))
+        paidBtns.forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                const element = e.target
+                const orderId = element.id
+
+                if (element.classList.contains('btn-danger')) {
+                    await fetch(`/order/paid/${orderId}`, {
+                        method: "PATCH"
+                    })
+                        .then(response => response.json())
+                        .then(response => {
+                            element.classList.add('btn-success')
+                            element.classList.remove('btn-danger')
+                            window.location.reload()
+                        })
+                        .catch(error => {
+                            console.error(e)
+                        });
+                } else {
+                    await fetch(`/order/bill/${orderId}`, {
+                        method: "PATCH"
+                    })
+                        .then(response => response.json())
+                        .then(response => {
+                            element.classList.add('btn-danger')
+                            element.classList.remove('btn-success')
+                            window.location.reload()
+                        })
+                        .catch(error => {
+                            console.error(e)
+                        });
+                }
+
+
+
+
+
+            })
+        });
+
+        // Pagination
+        const next = document.getElementById('next')
+        const prev = document.getElementById('prev')
+        const start = document.getElementById('start')
+        const end = document.getElementById('end')
+
+        next?.addEventListener('click', (e) => {
+            var url = new URL(window.location.href);
+            let currPage = parseInt(url.searchParams.get('page'))
+            if (!currPage) {
+                url.searchParams.set('page', 2);
+            } else {
+                url.searchParams.set('page', currPage + 1);
+            }
+            window.location.href = url
+        })
+        prev?.addEventListener('click', (e) => {
+            var url = new URL(window.location.href);
+            let currPage = parseInt(url.searchParams.get('page'))
+            url.searchParams.set('page', currPage - 1);
+            window.location.href = url
+        })
+        start?.addEventListener('click', (e) => {
+            var url = new URL(window.location.href);
+            let currPage = parseInt(url.searchParams.get('page'))
+            url.searchParams.set('page', 1);
+            window.location.href = url
+        })
+        end?.addEventListener('click', (e) => {
+            var url = new URL(window.location.href);
+            let currPage = parseInt(url.searchParams.get('page'))
+            const endPage = parseInt(e.target.innerText.split(" ")[1])
+            url.searchParams.set('page', endPage);
+            window.location.href = url
+        })
+
+
+    </script>
+</body>
+
+</html>
