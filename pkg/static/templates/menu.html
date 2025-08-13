@@ -137,7 +137,7 @@
             const descEl = card.querySelector('.card-text');
             const item_description = descEl?.textContent?.trim() || '';
 
-            const priceEl = card.querySelector('.list-group-item');
+            const priceEl = card.querySelector('.menu-item-price');
             let price = priceEl.textContent
 
             const qtyEl = card.querySelector(`#qty-${id}`);
@@ -167,7 +167,7 @@
 
             // card container
             const card = document.createElement('div');
-            card.classList.add('card', 'm-3', 'd-flex', 'flex-row');
+            card.classList.add('cart-dark','card', 'm-3', 'd-flex', 'flex-row');
             card.style.width = '18rem';
             card.id = `item-${item.item_id}`;
 
@@ -180,24 +180,30 @@
             title.textContent = item.item_name;
             body.appendChild(title);
 
-            const desc = document.createElement('p');
-            desc.classList.add('card-text');
-            desc.textContent = item.item_description;
-            body.appendChild(desc);
+            // const desc = document.createElement('p');
+            // desc.classList.add('card-text');
+            // desc.textContent = item.item_description;
+            // body.appendChild(desc);
 
 
             card.appendChild(body);
 
             // Price list
-            const ul = document.createElement('ul');
-            ul.classList.add('list-group', 'list-group-flush', 'd-flex', 'align-items-center', 'justify-content-center');
-            const li = document.createElement('li');
-            li.classList.add('list-group-item');
-            li.textContent = item.price;
-            ul.appendChild(li);
+            // const ul = document.createElement('ul');
+            // ul.classList.add('list-group', 'list-group-flush', 'd-flex', 'align-items-center', 'justify-content-center');
+            // const li = document.createElement('li');
+            // li.classList.add('list-group-item');
+            // li.textContent = item.price;
+            // ul.appendChild(li);
+
+            const price = document.createElement('p');
+            price.classList.add(
+                'd-flex', 'align-items-center', 'justify-content-center', 'ps-4', 'pe-4'
+            );
+            price.textContent = item.price
 
 
-            card.appendChild(ul);
+            // card.appendChild(ul);
 
             // btn group
             const btnGroup = document.createElement('div');
@@ -209,6 +215,7 @@
             );
             qtySpan.textContent = `Qty: ${qty}`;
             btnGroup.appendChild(qtySpan);
+            btnGroup.appendChild(price);
 
 
             card.appendChild(btnGroup);
