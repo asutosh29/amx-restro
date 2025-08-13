@@ -14,6 +14,8 @@ func InitViews() {
 	initFiles = append(initFiles, layouts...)
 	adminLayouts, _ := filepath.Glob(filepath.Join("pkg", "static", "templates", "admin", "*.html"))
 	initFiles = append(initFiles, adminLayouts...)
+	components_new, _ := filepath.Glob(filepath.Join("pkg", "static", "templates", "components_new", "*.html"))
+	initFiles = append(initFiles, components_new...)
 	partials, _ := filepath.Glob(filepath.Join("pkg", "static", "templates", "partials", "*.html"))
 	initFiles = append(initFiles, partials...)
 	components, _ := filepath.Glob(filepath.Join("pkg", "static", "templates", "components", "*.html"))

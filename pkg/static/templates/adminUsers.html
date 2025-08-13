@@ -14,11 +14,9 @@
         <div class="container d-flex flex-wrap">
             {{ $root := . }}
             {{ range $i, $u := .Users }}
-            <div class="card card-box m-3">
-                <div class="card-header">
-                    {{$u.Username}}
-                </div>
-                <ul class="list-group list-group-flush">
+            <div class="user-box card card-box m-3">
+                <h3 class="user-heading mx-2">Username: {{$u.Username}}</h3>
+                <ul class="list-group name-items list-group-flush">
                     <li class="list-group-item">Fullname: {{$u.FirstName}} {{$u.LastName}}
                     </li>
                     <li class="list-group-item">Contact: {{$u.Contact}}

@@ -8,7 +8,8 @@
         position: fixed;
         z-index: 1040;
     }
-    .round-10{
+
+    .round-10 {
         border-radius: 4rem;
     }
 
@@ -16,10 +17,15 @@
         margin-top: 7rem;
     }
 
+    .light-box{
+        background-color: var(--color-gray-800);
+        color: var(--color-gray-100);
+    }
+
     .box-shadow {
         width: 100%;
-        border: 0.5px solid rgba(193, 189, 255, 0.192);
-        box-shadow: 0px 0px 12px rgba(46, 46, 46, 0.099);
+        border: 0.5px solid rgba(48, 48, 48, 0.192);
+        box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.411);
         border-radius: 1rem;
         /* margin: 1rem; */
     }
@@ -27,13 +33,34 @@
     .box-in {
         width: 100%;
         /* border: 0.5px solid rgba(144, 144, 144, 0.2); */
-        box-shadow: inset 0px 2px 2px rgba(193, 189, 255, 0.226);
+        box-shadow: inset 0px 2px 2px rgba(0, 0, 0, 0.226);
         border-radius: 1rem;
         /* margin: 1rem; */
+    }
+    .item > * {
+        background-color: var(--color-gray-600) !important;
+        color: var(--color-gray-100) !important;
+    }
+
+    .accordion div{
+        background-color: var(--color-gray-800) !important;
+        color: var(--color-gray-100);
+    }
+
+    .user-box {
+        background-color: var(--color-gray-800) !important;
     }
 
     .card-box {
         width: 24rem;
+    }
+
+    .user-heading {
+        color: var(--color-gray-100) !important;
+    }
+    .name-items > li{
+        background-color: var(--color-gray-800) !important;
+        color: var(--color-gray-100);
     }
 
     :root {
@@ -50,35 +77,75 @@
         --color-gray-100: #f7fafc;
 
     }
-    body{
+
+    body {
         background-color: var(--color-gray-900);
         color: var(--color-gray-100);
     }
-    nav.navbar{
+
+    nav.navbar {
         background-color: var(--color-gray-800) !important;
     }
-    textarea{
-        color: var(--color-gray-100);
-        background-color: var(--color-gray-600) !important;
+
+    .navbar-brand{
+        color: rgb(255, 171, 2);
+        font-weight: 700;
+        font-size: 1.5rem;
     }
-    .card-dark{
+
+    textarea {
+        color: var(--color-gray-100) !important;
+        background-color: var(--color-gray-600) !important;
+        border-color: var(--color-gray-600) !important;
+    }
+    input{
+        background-color: var(--color-gray-800) !important;
+        color: var(--color-gray-100) !important;
+        border-color: var(--color-gray-600) !important;
+    }
+
+    input::placeholder {
+        background-color: var(--color-gray-800) !important;
+        color: var(--color-gray-100) !important;
+        border-color: var(--color-gray-600) !important;
+    }
+
+    #password-message{
+        background-color: var(--color-gray-300) !important;
+        color: var(--color-gray-900) !important;
+        border-radius: 1.5rem;
+    }
+    .card-dark {
         background-color: var(--color-gray-800);
         color: var(--color-gray-100);
         box-shadow: 0px 0px 20px rgba(151, 151, 151, 0.26);
     }
-    .cart_items > * {
+
+    .cart_items>* {
         background-color: var(--color-gray-600);
         color: var(--color-gray-100);
     }
-    .cart-dark.card{
+
+    .cart-dark.card {
         background-color: var(--color-gray-600);
         color: var(--color-gray-100);
     }
-    .admin-category-btn{
-        background-color: var(--color-gray-600) !important; 
+
+    .admin-category-btn {
+        background-color: var(--color-gray-900) !important;
         color: var(--color-gray-100) !important;
         border: 1px solid var(--color-accent-blue);
         font-weight: 600;
+    }
+
+    .modal-dialog>div {
+        background-color: var(--color-gray-800) !important;
+        color: var(--color-gray-100);
+    }
+
+    .auth-link{
+        color: var(--color-accent-blue);
+        text-decoration: none;
     }
 </style>
 {{ end }}

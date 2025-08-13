@@ -4,18 +4,19 @@
 
 
         <h6 class="box-shadow p-2 m-0">
-            order ID: {{ with index . 0}} {{.OrderID}} {{end}} <br>
-            table ID: {{ with index . 0}} {{.TableID}} {{end}} <br>
-            order status:{{ with index . 0}} {{.Order_status}} {{end}}
+            Order ID: {{ with index . 0}} {{.OrderID}} {{end}} <br>
+            Table ID: {{ with index . 0}} {{.TableID}} {{end}} <br>
+            Order status:{{ with index . 0}} {{.Order_status}} {{end}}
         </h6>
         <h6>
             {{ with index . 0 }}
             {{ if eq .Order_status "billed" }}
-            <h6>Please ask admin for Bill</h6>
+            <h4>Please ask admin for Bill</h4>
             {{end}}
 
             {{ if eq .Order_status "paid" }}
-            <h6 class="m-0">Bill Paid. Thanks for ordering with us!</h6>
+            <h4 class="m-0">Bill Paid. </h4>
+            <p class="m-0">Thanks for ordering with us! </p>
             <p class="m-0">Please visit us again! </p>
             {{end}}
 
@@ -24,17 +25,16 @@
 
     </div>
 
-    <div id="items" class="container box-in d-flex flex-column overflow-x-auto h-100 m-1">
+    <div id="items" class="container box-shadow d-flex flex-column overflow-x-auto h-100 m-1">
         <div class="container d-flex flex-column">
             <h4>Items:</h4>
             {{ range . }}
-            <div class="card" style="width: 18rem;">
+            <div class="card item my-1" style="width: 18rem;">
                 <div class="card-header">
-                    Item: Item: {{.ItemName}}
+                    <h5>{{.ItemName}}</h5>
+                    <hr>
+                    <p class="list-group-item">Qty: {{.Qty}} Price: {{.Price}}</p>
                 </div>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item">Qty: {{.Qty}} Price: {{.Price}}
-                </ul>
             </div>
             {{end}}
         </div>
@@ -58,14 +58,12 @@
         </div>
 
     </div>
-    <div class="card" style="width: 18rem;">
+    <div class="card item" style="width: 18rem;">
         <div class="card-header">
-            Total Amount:
+            <h4>Total Amount </h4>
+            <hr>
+            <p> ₹ {{.Total_amount}} </p>
         </div>
-        <ul class="list-group list-group-flush">
-            <li class="list-group-item">
-                <b> ₹ {{.Total_amount}} </b>
-        </ul>
     </div>
     {{end}}
 </div>

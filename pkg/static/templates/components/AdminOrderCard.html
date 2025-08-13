@@ -1,11 +1,11 @@
 {{define "AdminOrderCard"}}
-<div class=" box-shadow card-box m-1 d-flex align-items-center flex-column p-3">
+<div class=" box-shadow card-box m-1 d-flex align-items-center flex-column p-3" style="width: 30rem;">
     <!-- . is Array of Items -->
-    <div class="d-flex gap-2 justify-content-center flex-column">
-        <h4>
-            order ID: {{ with index . 0}} {{.OrderID}} {{end}}<br>
-            user ID: {{ with index . 0}} {{.CustomerID}} {{end}} <br>
-            table ID: {{ with index . 0}} {{.TableID}} {{end}} <br>
+    <div class="d-flex gap-2 justify-content-center flex-column rounded">
+        <h4 class="mx-2 w-100">
+            Order ID: {{ with index . 0}} {{.OrderID}} {{end}}<br>
+            User ID: {{ with index . 0}} {{.CustomerID}} {{end}} <br>
+            Table ID: {{ with index . 0}} {{.TableID}} {{end}} <br>
             order status:{{ with index . 0}} {{.Order_status}} {{end}}
         </h4>
         <div class="btns d-flex flex-column gap-1 m-2">
@@ -42,39 +42,32 @@
 
         {{ range . }}
         <!-- Item Qty Info -->
-        <div class="card ">
+        <div class="card item my-1">
             <div class="card-header">
                 <h6>Item: {{.ItemName}}
                 </h6>
+                <hr>
+                <p>Qty: {{.Qty}} Price: {{.Price}}</p>
             </div>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">Qty: {{.Qty}} Price: {{.Price}} </li>
-            </ul>
-
         </div>
         {{end}}
-        <div class="bottom">
-            <!-- Special Instructions and Amount -->
-            <div class="card">
-                <div class="card-header">
-                    <h6>Special instructions:</h6>
-                </div>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item">
-                       {{ with index . 0}} {{.Extra_instructions}} {{end}}
-                </ul>
-            </div>
-            <div class="card">
-                <div class="card-header">
-                    <h6>Total Amount:</h6>
-                </div>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item">
-                        <b> ₹ {{ with index . 0}} {{.Total_amount}} {{end}} </b>
-                </ul>
+        <div class="card item my-1">
+            <div class="card-header">
+                <h6>Special instructions:
+                </h6>
+                <hr>
+                <p>{{ with index . 0}} {{.Extra_instructions}} {{end}}</p>
             </div>
         </div>
-
+        <div class="card item my-1">
+            <div class="card-header">
+                <h6>Total Amount:
+                </h6>
+                <hr>
+                <p>₹ {{ with index . 0}} {{.Total_amount}} {{end}} </p>
+            </div>
+        </div>
+    
     </div>
 
 

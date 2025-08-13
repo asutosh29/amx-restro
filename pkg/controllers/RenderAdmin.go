@@ -87,5 +87,5 @@ func RenderAdminUsers(w http.ResponseWriter, r *http.Request) {
 	}
 	data["Popup"] = popup
 
-	views.Tpl.ExecuteTemplate(w, "users.html", data)
+	views.Tpl.ExecuteTemplate(w, "adminUsers.html", data)
 }
