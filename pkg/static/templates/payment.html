@@ -1,17 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     {{ template "Head" .}}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Restr | Payment</title>
 </head>
+
 <body>
     {{ template "Navbar" .}}
-    <h1>Order Placed Successfully</h1>
-    <p>Order id: {{ .OrderID }}</p>
-    <p>Table id: {{ .TableID }}</p>
-    <a href="/menu"><button class="btn btn-sm btn-primary" type="submit">Place New order!</button></a>
+    <div class="container mt-6 box-shadow">
+        <h1>Order Placed Successfully</h1>
+        <p>Order id: {{ .OrderID }}</p>
+        <p>Table id: {{ .TableID }}</p>
+
+        <a href="/user/orders"><button class="btn btn-sm btn-primary" type="submit">Check Your orders</button></a>
+        <a href="/menu"><button class="btn btn-sm btn-primary" type="submit">Create New Order</button></a>
+    </div>
     {{ template "Bootstrap" .}}
 </body>
+
 </html>

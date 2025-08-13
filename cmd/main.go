@@ -7,6 +7,7 @@ import (
 	"github.com/asutosh29/amx-restro/pkg/api"
 	"github.com/asutosh29/amx-restro/pkg/models"
 	"github.com/asutosh29/amx-restro/pkg/utils/config"
+	"github.com/asutosh29/amx-restro/pkg/utils/session_utils"
 	"github.com/asutosh29/amx-restro/pkg/views"
 )
 
@@ -17,6 +18,7 @@ func main() {
 	fmt.Println("Configuring server...")
 	config.InitConfig()
 	views.InitViews()
+	session_utils.InitiateStructSession()
 
 	// Initializing database
 	fmt.Println("Configuring Database...")

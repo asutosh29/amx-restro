@@ -1,9 +1,11 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/asutosh29/amx-restro/pkg/models"
+	"github.com/asutosh29/amx-restro/pkg/utils/session_utils"
 	"github.com/asutosh29/amx-restro/pkg/views"
 )
 
@@ -15,6 +17,12 @@ func RenderChef(w http.ResponseWriter, r *http.Request) {
 	allOrders, _ := models.GetAllOrdersByOrder()
 	data["Orders"] = allOrders
 	data["User"] = User
+
+	popup, err := session_utils.ExtractPopupFromFlash(w, r)
+	if err != nil {
+		fmt.Println("Error Loading Popus: ", err)
+	}
+	data["Popup"] = popup
 
 	views.Tpl.ExecuteTemplate(w, "chef.html", data)
 }

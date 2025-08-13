@@ -17,11 +17,25 @@ func HandleGetOrder(w http.ResponseWriter, r *http.Request) {
 }
 
 func HandlePostOrder(w http.ResponseWriter, r *http.Request) {
+	type Res struct {
+		Url string `json:"url"`
+	}
 	var jsonResponse types.OrderRequest
 	_ = json.NewDecoder(r.Body).Decode(&jsonResponse)
 
 	User := r.Context().Value("User").(types.User)
 	orderId, tableID := models.AddOrder(jsonResponse.Instructions, jsonResponse.Cart, User)
+	if tableID == -1 {
+		fmt.Println("No Valid Table")
+		// TODO:
+		session_utils.FlashMsgErr(w, r, "No tables empty currently. Please contact admin", true)
+		fmt.Println("Redirecting to menu")
+		temp := Res{
+			Url: "/menu",
+		}
+		json.NewEncoder(w).Encode(temp)
+		return
+	}
 	// TODO: set orderID and tableID in context for showing order placed
 	store := session_utils.Store
 	session, _ := store.Get(r, "payments")
@@ -31,9 +45,6 @@ func HandlePostOrder(w http.ResponseWriter, r *http.Request) {
 	session.Values["tableID"] = tableID
 	session.Save(r, w)
 
-	type Res struct {
-		Url string `json:"url"`
-	}
 	temp := Res{
 		Url: "/payment",
 	}

@@ -1,17 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    {{template "Head" .}}
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Restro | User Order</title>
+    {{ template "Head" .}}
+    <title>Restro | Admin</title>
+    <style>
+        #order-container {
+            height: calc(100vh - 12rem);
+        }
+    </style>
 </head>
+
 <body>
-    {{template "Navbar" .}}
-    <h1>Under Construction! Ask Admin for order details. </h1>
-    <h1>Under Construction! Ask Admin for order details. </h1>
-    <h1>Under Construction! Ask Admin for order details. </h1>
-    <h1>Under Construction! Ask Admin for order details. </h1>
-    {{template "Bootstrap" .}}
+    <div class="container mt-6">
+        {{ template "Navbar" .}}
+        <h1>User Orders</h1>
+        <div id="order-container" class="w-100 orders d-flex box-shadow overflow-x-scroll overflow-y-scroll">
+            {{ range .UserOrders}}
+                {{ template "UserOrderCard" .}}
+            {{end}}
+        </div>
+    </div>
+
+    {{ template "Bootstrap" .}}
+
 </body>
+
 </html>

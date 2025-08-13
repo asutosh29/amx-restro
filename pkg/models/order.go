@@ -96,6 +96,26 @@ func GetOrder(orderId int) ([]types.OrderItem, error) {
 	return OrderList, nil
 }
 
+func GetOrderByUserId(userId int) ([][]types.OrderItem, error) {
+	orderIds, _ := DB.Query(`
+    SELECT DISTINCT order_id  FROM orders WHERE customer_id = ?
+`, userId)
+	var IdList []int
+	var payload [][]types.OrderItem
+
+	for orderIds.Next() {
+		var temp int
+		orderIds.Scan(&temp)
+		IdList = append(IdList, temp)
+	}
+	fmt.Println("Ids:", IdList)
+	for _, v := range IdList {
+		orderItem, _ := GetOrder(v)
+		payload = append(payload, orderItem)
+	}
+	return payload, nil
+}
+
 func AddOrder(instruction string, cart []types.CartItem, user types.User) (int, int) {
 	// Get User ID
 	userID := user.UserId

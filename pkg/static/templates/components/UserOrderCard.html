@@ -1,0 +1,72 @@
+{{define "UserOrderCard"}}
+<div class="box-shadow d-flex flex-column align-items-center card-box p-3 m-2">
+    <div class="container d-flex gap-2 justify-content-center  flex-column m-1 px-3 py-1">
+
+
+        <h6 class="box-shadow p-2 m-0">
+            order ID: {{ with index . 0}} {{.OrderID}} {{end}} <br>
+            table ID: {{ with index . 0}} {{.TableID}} {{end}} <br>
+            order status:{{ with index . 0}} {{.Order_status}} {{end}}
+        </h6>
+        <h6>
+            {{ with index . 0 }}
+            {{ if eq .Order_status "billed" }}
+            <h6>Please ask admin for Bill</h6>
+            {{end}}
+
+            {{ if eq .Order_status "paid" }}
+            <h6 class="m-0">Bill Paid. Thanks for ordering with us!</h6>
+            <p class="m-0">Please visit us again! </p>
+            {{end}}
+
+            {{ end }}
+        </h6>
+
+    </div>
+
+    <div id="items" class="container box-in d-flex flex-column overflow-x-auto h-100 m-1">
+        <div class="container d-flex flex-column">
+            <h4>Items:</h4>
+            {{ range . }}
+            <div class="card" style="width: 18rem;">
+                <div class="card-header">
+                    Item: Item: {{.ItemName}}
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Qty: {{.Qty}} Price: {{.Price}}
+                </ul>
+            </div>
+            {{end}}
+        </div>
+
+
+    </div>
+    {{ with index . 0}}
+    <div class="accordion" id="accordionExample">
+        <div class="accordion-item w-100">
+            <h2 class="accordion-header">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapse{{.OrderID}}" aria-expanded="true" aria-controls="collapse{{.OrderID}}">
+                    Special Instructions
+                </button>
+            </h2>
+            <div id="collapse{{.OrderID}}" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    {{.Extra_instructions}}
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="card" style="width: 18rem;">
+        <div class="card-header">
+            Total Amount:
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+                <b> ₹ {{.Total_amount}} </b>
+        </ul>
+    </div>
+    {{end}}
+</div>
+{{end}}

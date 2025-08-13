@@ -84,3 +84,8 @@ type Table struct {
 	Table_id    int
 	IsAvailable bool
 }
+
+type Popup struct {
+	Msg     string
+	IsError bool
+}

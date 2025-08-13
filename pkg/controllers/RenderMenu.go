@@ -6,6 +6,7 @@ import (
 
 	"github.com/asutosh29/amx-restro/pkg/models"
 	"github.com/asutosh29/amx-restro/pkg/types"
+	"github.com/asutosh29/amx-restro/pkg/utils/session_utils"
 	"github.com/asutosh29/amx-restro/pkg/views"
 )
 
@@ -48,6 +49,12 @@ func RenderMenu(w http.ResponseWriter, r *http.Request) {
 	data["User"] = r.Context().Value("User")
 	data["Items"] = items
 	data["Categories"] = CategoryList
+
+	popup, err := session_utils.ExtractPopupFromFlash(w, r)
+	if err != nil {
+		fmt.Println("Error Loading Popus: ", err)
+	}
+	data["Popup"] = popup
 
 	views.Tpl.ExecuteTemplate(w, "menu.html", data)
 }

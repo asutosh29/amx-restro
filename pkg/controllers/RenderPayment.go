@@ -32,12 +32,18 @@ func RenderPayment(w http.ResponseWriter, r *http.Request) {
 	session.Save(r, w)
 
 	if orderID == -1 || tableID == -1 {
-		fmt.Println("Bro pehle khaana order kro!")
+		session_utils.FlashMsgErr(w, r, "Please Place an Order first!", true)
 		http.Redirect(w, r, "/menu", http.StatusSeeOther)
 	}
 
 	data["OrderID"] = orderID
 	data["TableID"] = tableID
+
+	popup, err := session_utils.ExtractPopupFromFlash(w, r)
+	if err != nil {
+		fmt.Println("Error Loading Popup: ", err)
+	}
+	data["Popup"] = popup
 
 	views.Tpl.ExecuteTemplate(w, "payment.html", data)
 }

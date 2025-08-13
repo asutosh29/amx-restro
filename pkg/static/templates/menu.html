@@ -347,7 +347,7 @@
                     localStorage.setItem('cart', JSON.stringify(cart))
                     instruct = ""
                     localStorage.setItem('instruct', JSON.stringify(instruct))
-
+                    console.log('response.url :>> ', response.url);
                     window.location.href = response.url;
                 })
         })
