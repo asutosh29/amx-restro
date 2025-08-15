@@ -24,11 +24,11 @@
 
     <!-- MODAL -->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog shadow">
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel">Confirmations</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <p>Please confirm your order before placing it</p>
@@ -44,10 +44,10 @@
     {{ template "Categories" . }}
 
     <div id="menuMain" class=" container d-flex mt-6 vw-100">
-        <div class="container Menu w-75">
+        <div class="container Menu w-75 " >
             <h1>Menu</h1>
             <div id="menu-container"
-                class="d-flex justify-content-center flex-row gap-2 p-3 box-shadow overflow-y-scroll">
+                class="d-flex justify-content-center flex-row gap-2 p-3 box-shadow overflow-y-scroll bg-mid-dark rounded-5 p-1">
                 <div id="menu" class="menu-card-container d-flex flex-wrap justify-content-center gap-2">
                     {{ range .Items}}
                     {{ template "MenuCard" .}}
@@ -55,9 +55,9 @@
                 </div>
             </div>
         </div>
-        <div id="cart" class="w-25">
+        <div id="cart" class="w-25 ">
             <h1>Cart</h1>
-            <div id="cart-container" class="p-2 box-shadow">
+            <div id="cart-container" class="p-2 box-shadow bg-mid-dark rounded-5 p-1">
                 <div id="cart_items" class="box-shadow overflow-y-scroll">
                 </div>
                 <div id="bottom" class="d-flex flex-column gap-2 p-4">
@@ -167,7 +167,7 @@
 
             // card container
             const card = document.createElement('div');
-            card.classList.add('card', 'm-3', 'd-flex', 'flex-row');
+            card.classList.add('card', 'm-3', 'p-2', 'bg-mid-light','text-white','shadow-lg', 'rounded-3','d-flex', 'flex-row', 'align-items-centre' ,'justify-content-center');
             card.style.width = '18rem';
             card.id = `item-${item.item_id}`;
 
@@ -189,15 +189,21 @@
             card.appendChild(body);
 
             // Price list
-            const ul = document.createElement('ul');
-            ul.classList.add('list-group', 'list-group-flush', 'd-flex', 'align-items-center', 'justify-content-center');
-            const li = document.createElement('li');
-            li.classList.add('list-group-item');
-            li.textContent = item.price;
-            ul.appendChild(li);
+            // const ul = document.createElement('ul');
+            // ul.classList.add('list-group', 'list-group-flush', 'd-flex', 'align-items-center', 'justify-content-center');
+            // const li = document.createElement('li');
+            // li.classList.add('list-group-item');
+            // li.textContent = item.price;
+            // ul.appendChild(li);
+            const priceDiv = document.createElement('div')
+            priceDiv.classList.add('d-flex','align-items-center')
+            const price = document.createElement('p')
+            price.classList.add("fw-bold", "text-decoration-none", "list-unstyled","list-group-item")
+            price.textContent = item.price
 
+            priceDiv.appendChild(price)
 
-            card.appendChild(ul);
+            card.appendChild(priceDiv);
 
             // btn group
             const btnGroup = document.createElement('div');

@@ -42,13 +42,13 @@
 
         {{ range . }}
         <!-- Item Qty Info -->
-        <div class="card ">
-            <div class="card-header">
+        <div class="card my-1">
+            <div class="card-header bg-mid-light text-white">
                 <h6>Item: {{.ItemName}}
                 </h6>
             </div>
             <ul class="list-group list-group-flush">
-                <li class="list-group-item">Qty: {{.Qty}} Price: {{.Price}} </li>
+                <li class="list-group-item bg-light-dark text-white">Qty: {{.Qty}} Price: {{.Price}} </li>
             </ul>
 
         </div>
@@ -56,20 +56,20 @@
         <div class="bottom">
             <!-- Special Instructions and Amount -->
             <div class="card">
-                <div class="card-header">
+                <div class="card-header bg-mid-light text-white">
                     <h6>Special instructions:</h6>
                 </div>
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item">
+                    <li class="list-group-item bg-light-dark text-white">
                        {{ with index . 0}} {{.Extra_instructions}} {{end}}
                 </ul>
             </div>
-            <div class="card">
-                <div class="card-header">
+            <div class="card my-2">
+                <div class="card-header bg-mid-light text-white">
                     <h6>Total Amount:</h6>
                 </div>
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item">
+                    <li class="list-group-item bg-light-dark text-white">
                         <b> ₹ {{ with index . 0}} {{.Total_amount}} {{end}} </b>
                 </ul>
             </div>
