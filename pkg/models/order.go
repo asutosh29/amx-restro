@@ -302,7 +302,7 @@ func MarkOrderServedById(orderID int) error {
 		return err
 	}
 	// Update Table Status
-	if err := SetTable(tableID, 1); err != nil {
+	if err := SetTable(tableID, 0); err != nil {
 		fmt.Println("Error updating table status in MarkOrderServedById")
 		return err
 	}
@@ -379,4 +379,68 @@ func MarkOrderPaidById(orderID int) error {
 		return err
 	}
 	return nil
+}
+
+func OrderExistsById(orderID int) (bool, error) {
+	var exists int
+	err := DB.QueryRow(`
+    SELECT 1
+    FROM orders
+    WHERE order_id = ?
+    LIMIT 1
+`, orderID).Scan(&exists)
+
+	if err != nil {
+		if err.Error() == "sql: no rows in result set" {
+			return false, nil
+		}
+		return false, err
+	}
+	return true, nil
+}
+
+func GetOrderStatusById(orderID int) (string, error) {
+	var status string
+	err := DB.QueryRow(`
+    SELECT order_status
+    FROM orders
+    WHERE order_id = ?
+`, orderID).Scan(&status)
+
+	if err != nil {
+		return "", err
+	}
+	return status, nil
+}
+
+func ValidateOrderStatusTransition(currentStatus string, targetStatus string) bool {
+	// If order is paid, no transitions allowed
+	if currentStatus == "paid" {
+		return false
+	}
+
+	// If order is billed, can only go to paid
+	if currentStatus == "billed" {
+		return targetStatus == "paid"
+	}
+
+	// placed, cooking, served can transition between each other freely
+	// and can all go to billed
+	validTransitions := map[string][]string{
+		"placed":  {"cooking", "served", "billed"},
+		"cooking": {"placed", "served", "billed"},
+		"served":  {"placed", "cooking", "billed"},
+	}
+
+	allowedTransitions, exists := validTransitions[currentStatus]
+	if !exists {
+		return false
+	}
+
+	for _, allowed := range allowedTransitions {
+		if allowed == targetStatus {
+			return true
+		}
+	}
+	return false
 }
