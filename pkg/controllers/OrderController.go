@@ -21,68 +21,14 @@ func HandlePostOrder(w http.ResponseWriter, r *http.Request) {
 		Url string `json:"url"`
 	}
 	var jsonResponse types.OrderRequest
-	err := json.NewDecoder(r.Body).Decode(&jsonResponse)
-	if err != nil {
-		fmt.Println("Invalid JSON format")
-		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(map[string]string{"error": "Invalid JSON format"})
-		return
-	}
-
-	// Validate cart is not empty
-	if len(jsonResponse.Cart) == 0 {
-		fmt.Println("Empty cart")
-		session_utils.FlashMsgErr(w, r, "Cart cannot be empty", true)
-		w.WriteHeader(http.StatusBadRequest)
-		temp := Res{
-			Url: "/menu",
-		}
-		json.NewEncoder(w).Encode(temp)
-		return
-	}
-
-	// Validate item quantities and item existence
-	for _, item := range jsonResponse.Cart {
-		if item.Qty <= 0 {
-			fmt.Println("Invalid item quantity")
-			session_utils.FlashMsgErr(w, r, "Invalid item quantity (must be greater than 0)", true)
-			w.WriteHeader(http.StatusBadRequest)
-			temp := Res{
-				Url: "/menu",
-			}
-			json.NewEncoder(w).Encode(temp)
-			return
-		}
-
-		// Validate item exists in database
-		itemExists, err := models.ItemExistsById(item.ID)
-		if err != nil {
-			fmt.Println("Error checking item existence:", err)
-			w.WriteHeader(http.StatusInternalServerError)
-			session_utils.FlashMsgErr(w, r, "Error validating item", true)
-			temp := Res{
-				Url: "/menu",
-			}
-			json.NewEncoder(w).Encode(temp)
-			return
-		}
-
-		if !itemExists {
-			fmt.Println("Item not found:", item.ID)
-			session_utils.FlashMsgErr(w, r, "Invalid item ID", true)
-			w.WriteHeader(http.StatusBadRequest)
-			temp := Res{
-				Url: "/menu",
-			}
-			json.NewEncoder(w).Encode(temp)
-			return
-		}
-	}
+	fmt.Println("Request Body: ", r.Body)
+	_ = json.NewDecoder(r.Body).Decode(&jsonResponse)
 
 	User := r.Context().Value("User").(types.User)
 	orderId, tableID := models.AddOrder(jsonResponse.Instructions, jsonResponse.Cart, User)
 	if tableID == -1 {
 		fmt.Println("No Valid Table")
+		// TODO:
 		session_utils.FlashMsgErr(w, r, "No tables empty currently. Please contact admin", true)
 		fmt.Println("Redirecting to menu")
 		temp := Res{
