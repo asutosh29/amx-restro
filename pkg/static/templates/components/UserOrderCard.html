@@ -1,13 +1,11 @@
 {{define "UserOrderCard"}}
-<div class="box-shadow d-flex flex-column align-items-center card-box p-3 m-2">
+<div class="border border-1 border-opacity-25 border-white rounded-4 shadow d-flex flex-column align-items-center p-3 m-2" >
     <div class="container d-flex gap-2 justify-content-center  flex-column m-1 px-3 py-1">
 
 
-        <h6 class="box-shadow p-2 m-0">
-            order ID: {{ with index . 0}} {{.OrderID}} {{end}} <br>
-            table ID: {{ with index . 0}} {{.TableID}} {{end}} <br>
-            order status:{{ with index . 0}} {{.Order_status}} {{end}}
-        </h6>
+        <h5>Order ID: {{ with index . 0}} {{.OrderID}} {{end}}</h5>
+        <h5>Table ID: {{ with index . 0}} {{.TableID}} {{end}}</h5>
+        <h5>Order status:{{ with index . 0}} {{.Order_status}} {{end}}</h5>
         <h6>
             {{ with index . 0 }}
             {{ if eq .Order_status "billed" }}
@@ -24,16 +22,16 @@
 
     </div>
 
-    <div id="items" class="container box-in d-flex flex-column overflow-x-auto h-100 m-1">
-        <div class="container d-flex flex-column">
+    <div id="items" class="container box-in d-flex flex-column h-100 m-1">
+        <div class="container d-flex flex-column overflow-y-auto ">
             <h4>Items:</h4>
             {{ range . }}
-            <div class="card" style="width: 18rem;">
-                <div class="card-header">
-                    Item: Item: {{.ItemName}}
+            <div class="card bg-mid-dark text-white">
+                <div class="card-header bg-mid-light">
+                    Item: {{.ItemName}}
                 </div>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item">Qty: {{.Qty}} Price: {{.Price}}
+                <ul class="list-group list-group-flush bg-mid-light text-white">
+                    <li class="list-group-item bg-light-dark text-white">Qty: {{.Qty}} Price: {{.Price}}
                 </ul>
             </div>
             {{end}}
@@ -42,6 +40,15 @@
 
     </div>
     {{ with index . 0}}
+    <div class="card">
+        <div class="card-header bg-mid-light text-white">
+            Total Amount:
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item bg-light-dark text-white">
+                <b> ₹ {{.Total_amount}} </b>
+        </ul>
+    </div>
     <div class="accordion" id="accordionExample">
         <div class="accordion-item w-100">
             <h2 class="accordion-header">
@@ -58,15 +65,7 @@
         </div>
 
     </div>
-    <div class="card" style="width: 18rem;">
-        <div class="card-header">
-            Total Amount:
-        </div>
-        <ul class="list-group list-group-flush">
-            <li class="list-group-item">
-                <b> ₹ {{.Total_amount}} </b>
-        </ul>
-    </div>
+
     {{end}}
 </div>
 {{end}}

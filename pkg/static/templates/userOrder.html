@@ -12,10 +12,10 @@
 </head>
 
 <body>
-    <div class="container mt-6">
+    <div class="container mt-6 shadow rounded-5 p-4 bg-mid-dark">
         {{ template "Navbar" .}}
         <h1>User Orders</h1>
-        <div id="order-container" class="w-100 orders d-flex box-shadow overflow-x-scroll overflow-y-scroll">
+        <div id="order-container" class="w-100 orders grid-container overflow-x-scroll overflow-y-scroll">
             {{ range .UserOrders}}
                 {{ template "UserOrderCard" .}}
             {{end}}

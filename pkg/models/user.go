@@ -120,3 +120,21 @@ func MakeCustomerById(userId int) (int, error) {
 	}
 	return userId, nil
 }
+
+func UserExistsById(userID int) (bool, error) {
+	var exists int
+	err := DB.QueryRow(`
+    SELECT 1
+    FROM users
+    WHERE id = ?
+    LIMIT 1
+`, userID).Scan(&exists)
+
+	if err != nil {
+		if err.Error() == "sql: no rows in result set" {
+			return false, nil
+		}
+		return false, err
+	}
+	return true, nil
+}

@@ -27,3 +27,22 @@ func GetItems(idString string) ([]types.Item, error) {
 	}
 	return ItemList, nil
 }
+
+// ItemExistsById checks if an item exists in the database
+func ItemExistsById(itemID string) (bool, error) {
+	var exists int
+	err := DB.QueryRow(`
+    SELECT 1
+    FROM items
+    WHERE item_id = ?
+    LIMIT 1
+`, itemID).Scan(&exists)
+
+	if err != nil {
+		if err.Error() == "sql: no rows in result set" {
+			return false, nil
+		}
+		return false, err
+	}
+	return true, nil
+}

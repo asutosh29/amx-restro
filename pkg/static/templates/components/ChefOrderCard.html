@@ -1,6 +1,6 @@
 {{define "ChefOrderCard"}}
 {{ if or (eq (index . 0).Order_status "placed") (eq (index . 0).Order_status "cooking") }}
-<div class="d-flex flex-column align-items-center box-shadow p-3 card-box">
+<div class="d-flex flex-column align-items-center box-shadow p-3 card-box mx-2 bg-mid-dark">
     <div class="d-flex gap-2 justify-content-center flex-column">
         <h4>
             order ID: {{ (index . 0).OrderID }}
@@ -26,22 +26,24 @@
 
     <div class="d-flex flex-column">
         {{ range . }}
-        <div class="card" style="width: 18rem;">
-            <div class="card-header">
-                Item: {{ .ItemName }}
+        <div class="card my-1">
+            <div class="card-header bg-mid-light text-white">
+                <h6>Item: {{.ItemName}}
+                </h6>
             </div>
             <ul class="list-group list-group-flush">
-                <li class="list-group-item">Qty: {{ .Qty }}</li>
+                <li class="list-group-item bg-light-dark text-white">Qty: {{.Qty}}</li>
             </ul>
+
         </div>
         {{ end }}
 
         <div class="card" style="width: 18rem;">
-            <div class="card-header">
+            <div class="card-header bg-mid-light text-white">
                 Special instructions:
             </div>
             <ul class="list-group list-group-flush">
-                <li class="list-group-item">
+                <li class="list-group-item bg-light-dark text-white">
                     {{ (index . 0).Extra_instructions }}
                 </li>
             </ul>

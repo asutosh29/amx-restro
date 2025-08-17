@@ -1,6 +1,6 @@
 {{define "MenuCard"}}
-<div class="card card-height m-3" style="width: 14rem; max-height: 28rem;" id="item-{{.Item_id}}">
-    <img src="/pkg/static/images/items/default.jpg" class="card-img-top" alt="{{.Item_name}}">
+<div class="card card-height card-dims m-3 p-2 bg-mid-light text-white shadow-lg rounded-3"  id="item-{{.Item_id}}">
+    <img src="/images/items/default.jpg" class="card-img-top rounded-3" alt="{{.Item_name}}">
     <div class="card-body">
         <h5 class="card-title">
             {{ .Item_name }}
@@ -13,11 +13,10 @@
         <p class="card-text" style="-webkit-line-clamp: 3;line-clamp:3;">
             {{.Item_description }}
         </p>
+        <p class="fw-bold text-decoration-none list-unstyled list-group-item">Price: {{.Price }}
+        </p>
     </div>
-    <ul class="list-group list-group-flush">
-        <li class="list-group-item">Price: {{.Price }}
-        </li>
-    </ul>
+        
     <div class="btn-group" role="group" aria-label="Basic mixed styles example">
         <button type="button" class="btn btn-danger lefts" id="{{.Item_id}}">-</button>
         <span id="qty-{{.Item_id}}" class="d-flex align-items-center justify-content-center ps-4 pe-4">0</span>

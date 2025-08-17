@@ -10,7 +10,7 @@
 
 <body>
     {{ template "Navbar" .}}
-    <div class="container mt-6 box-shadow">
+    <div class="container mt-6 shadow rounded-5 p-4 bg-mid-dark">
         <h1>Order Placed Successfully</h1>
         <p>Order id: {{ .OrderID }}</p>
         <p>Table id: {{ .TableID }}</p>

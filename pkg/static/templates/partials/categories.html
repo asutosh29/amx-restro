@@ -1,13 +1,13 @@
 {{define "Categories"}}
-<nav class="navbar fixed-top navbar-expand-lg bg-dark bg-body-tertiary mt-5 z-1" data-bs-theme="dark">
+<nav class="navbar fixed-top navbar-expand-lg p-1 bg-transparent mt-5 z-1" data-bs-theme="dark">
     <div class="container-fluid ">
-        <div class="collapse navbar-collapse d-flex justify-content-center gap-2" id="navbarNav">
+        <div class="collapse navbar-collapse d-flex justify-content-center gap-2 py-1" id="navbarNav">
             {{ range .Categories}}
             <ul class="navbar-nav">
                 <li class="nav-item">
                     <form action="/menu" method="get">
                         <input type="hidden" name="category" value="{{ . }}">
-                        <button type="submit" class="btn btn-info">
+                        <button type="submit" class="btn btn-primary">
                             {{ . }}
                         </button>
                     </form>
@@ -18,7 +18,7 @@
         </div>
         <form class="d-flex" role="search" action="/menu" method="get">
             <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="search" />
-            <button class="btn btn-outline-success" type="submit">Search</button>
+            <button class="btn btn-primary" type="submit">Search</button>
         </form>
     </div>
 

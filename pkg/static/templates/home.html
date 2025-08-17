@@ -4,23 +4,36 @@
 <head>
     {{ template "Head" .}}
     <title>Restro | Home</title>
+    <style>
+        .home{
+            height: 70vh;
+        }
+    </style>
 </head>
 
 <body>
     {{ template "Navbar" . }}
-    
-    
-    <div class="container mt-6 box-shadow">
+
+
+    <div class="d-flex justify-content-around align-items-center container mt-6 shadow rounded-5 p-4 home bg-mid-dark">
         {{ template "popup" .}}
-        <h1>Home page</h1>
-        <ol>
-            <li>Go to Menu</li>
-            <li>Choose Your items</li>
-            <li>Add any instructions if u want</li>
-            <li>Click on checkout</li>
-            <li>Mark your orderId and tableId</li>
-            <li>Ask Admin for Bill</li>
-        </ol>
+
+        <div class="">
+            <h1>Welcome to Restro Cafe</h1>
+            <h3>Best food for the best peeps</h3>
+        </div>
+        <div class="">
+            <h1>Follow the steps and enjoy! </h1>
+            <ol>
+                <li>Go to Menu</li>
+                <li>Choose Your items</li>
+                <li>Add any instructions if u want</li>
+                <li>Click on checkout</li>
+                <li>Mark your orderId and tableId</li>
+                <li>Ask Admin for Bill</li>
+            </ol>
+        </div>
+
 
     </div>
     {{ template "Bootstrap" .}}

@@ -14,7 +14,7 @@ func Start() {
 	r := mux.NewRouter()
 
 	//Adding static files
-	r.PathPrefix("/pkg/static/").Handler(http.StripPrefix("/pkg/static/", http.FileServer(http.Dir("./pkg/static/"))))
+	r.PathPrefix("/images/").Handler(http.StripPrefix("/images/", http.FileServer(http.Dir("./pkg/static/images/"))))
 	// r.StrictSlash(true)
 	r.Use(middlewares.LogRequests)
 	r.Use(middlewares.LoggedIn)
