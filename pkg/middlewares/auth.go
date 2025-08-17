@@ -15,6 +15,7 @@ func LoggedIn(next http.Handler) http.Handler {
 		// Check for token
 		if r.URL.Path == "/login" || r.URL.Path == "/register" || r.URL.Path == "/logout" {
 			next.ServeHTTP(w, r)
+			return // add return statement, prevents furhter execution by mistake
 		}
 		cookie_jwt, err := r.Cookie("token")
 		if err != nil {
@@ -23,7 +24,7 @@ func LoggedIn(next http.Handler) http.Handler {
 				http.Redirect(w, r, "/login", http.StatusSeeOther)
 				return
 			}
-			w.WriteHeader(http.StatusBadRequest)
+			http.Redirect(w, r, "/login", http.StatusSeeOther)
 			return
 		}
 
@@ -32,6 +33,7 @@ func LoggedIn(next http.Handler) http.Handler {
 		if err != nil {
 			fmt.Println("Error validating JWT")
 			http.Redirect(w, r, "/login", http.StatusSeeOther)
+			return
 		}
 
 		// TODO: Store User in context for Frontend
@@ -53,7 +55,7 @@ func NewUser(next http.Handler) http.Handler {
 				next.ServeHTTP(w, r)
 				return
 			}
-			w.WriteHeader(http.StatusBadRequest)
+			next.ServeHTTP(w, r)
 			return
 		}
 
@@ -62,9 +64,11 @@ func NewUser(next http.Handler) http.Handler {
 		if err != nil {
 			fmt.Println("Error validating JWT")
 			next.ServeHTTP(w, r)
+			return
 		}
 		// TODO: Store User in context for Frontend
 		http.Redirect(w, r, "/home", http.StatusSeeOther)
+		return
 	})
 }
 
