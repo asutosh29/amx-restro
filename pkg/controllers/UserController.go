@@ -71,7 +71,7 @@ func HandleRegisterUser(w http.ResponseWriter, r *http.Request) {
 	err := models.AddUser(user)
 	if err != nil {
 		fmt.Println("Error adding user to Database: ", err)
-		w.WriteHeader(http.StatusInternalServerError)
+		// w.WriteHeader(http.StatusInternalServerError)
 		session_utils.FlashMsgErr(w, r, "Error registering user", true)
 		http.Redirect(w, r, "/register", http.StatusSeeOther)
 		return
@@ -99,7 +99,7 @@ func HandleLoginUser(w http.ResponseWriter, r *http.Request) {
 	if val, err := models.IsEmailUnique(user); err != nil {
 		fmt.Println("Email check error")
 		fmt.Println(err)
-		w.WriteHeader(http.StatusInternalServerError)
+		// w.WriteHeader(http.StatusInternalServerError)
 		session_utils.FlashMsgErr(w, r, "No User found register first!", true)
 		http.Redirect(w, r, "/register", http.StatusSeeOther)
 		return
@@ -118,7 +118,7 @@ func HandleLoginUser(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println("Error retrieving user")
 		fmt.Println(err)
-		w.WriteHeader(http.StatusInternalServerError)
+		// w.WriteHeader(http.StatusInternalServerError)
 		session_utils.FlashMsgErr(w, r, "Error Retrieving User. Please Login with Valid details", true)
 
 		http.Redirect(w, r, "/login", http.StatusSeeOther)
@@ -136,7 +136,7 @@ func HandleLoginUser(w http.ResponseWriter, r *http.Request) {
 	// Check JWT
 	token_JWT, err := jwt_utils.GenerateJWT(RealUser)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		// w.WriteHeader(http.StatusInternalServerError)
 		session_utils.FlashMsgErr(w, r, "Error Generating JWT", true)
 		http.Redirect(w, r, "/login", http.StatusSeeOther)
 		return
