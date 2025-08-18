@@ -12,6 +12,13 @@
 - Chef page shows all the relevant orders (placed and being cooked) for the Chef
 - Pagination for clutter free viewing of all orders
 
+# Docker instructions
+If docker is installed
+```
+> docker compose up --build
+```
+
+NOTE: If you are rebuilding the container then make sure to remove the older volume which are created, otherwise the new files won't be copied into the container
 
 # Installation steps
 1. Install the required Packages
