@@ -26,28 +26,28 @@ func Start() {
 
 	// Static Routes
 	StaticRouter := r.PathPrefix("/").Subrouter()
-	StaticRouter.Use(middlewares.LoggedIn)
+	StaticRouter.Use(middlewares.RestrictToLoggedIn)
 	routers.RegisterStaticRouter(StaticRouter)
 
 	// Menu router
 	MenuRouter := r.PathPrefix("/menu").Subrouter()
-	MenuRouter.Use(middlewares.LoggedIn)
+	MenuRouter.Use(middlewares.RestrictToLoggedIn)
 	routers.RegisterMenuRouter(MenuRouter)
 
 	// Order router
 	OrderRouter := r.PathPrefix("/order").Subrouter()
-	OrderRouter.Use(middlewares.LoggedIn)
+	OrderRouter.Use(middlewares.RestrictToLoggedIn)
 	routers.RegisterOrderRouter(OrderRouter)
 
 	// Admin router
 	AdminRouter := r.PathPrefix("/admin").Subrouter()
-	AdminRouter.Use(middlewares.LoggedIn)
+	AdminRouter.Use(middlewares.RestrictToLoggedIn)
 	AdminRouter.Use(middlewares.AdminAccessOnly)
 	routers.RegisterAdminRouter(AdminRouter)
 
 	// User router
 	UserRouter := r.PathPrefix("/user").Subrouter()
-	UserRouter.Use(middlewares.LoggedIn)
+	UserRouter.Use(middlewares.RestrictToLoggedIn)
 	routers.RegisterUserRouter(UserRouter)
 
 	PORT := config.PORT
