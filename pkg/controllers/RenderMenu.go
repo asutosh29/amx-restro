@@ -27,6 +27,7 @@ func RenderMenu(w http.ResponseWriter, r *http.Request) {
 	// Get items by category
 	if category_query == "" {
 		items, _ = models.GetAllItems()
+		category_query = "All"
 	} else {
 		items, err = models.GetAllItemsByCategory(category_query)
 		if err != nil {
@@ -49,6 +50,7 @@ func RenderMenu(w http.ResponseWriter, r *http.Request) {
 	data["User"] = r.Context().Value("User")
 	data["Items"] = items
 	data["Categories"] = CategoryList
+	data["Category"] = category_query
 
 	popup, err := session_utils.ExtractPopupFromFlash(w, r)
 	if err != nil {

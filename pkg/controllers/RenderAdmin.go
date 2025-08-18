@@ -57,6 +57,11 @@ func RenderAdminOrders(w http.ResponseWriter, r *http.Request) {
 	// Package Data
 	User := r.Context().Value("User")
 	data := make(map[string]interface{})
+	if statusName != "" {
+		data["Category"] = statusName
+	} else {
+		data["Category"] = "all"
+	}
 	data["User"] = User
 	data["Orders"] = allOrders
 

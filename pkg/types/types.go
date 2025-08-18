@@ -54,9 +54,6 @@ type Order_table_id struct {
 	TableID int
 }
 
-type OrderID struct{}
-type TableID struct{}
-
 type Category struct {
 	Category_id   int
 	Category_name string
