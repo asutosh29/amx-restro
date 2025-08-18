@@ -131,9 +131,9 @@ func UserExistsById(userID int) (bool, error) {
 `, userID).Scan(&exists)
 
 	if err != nil {
-		if err.Error() == "sql: no rows in result set" {
-			return false, nil
-		}
+		// if err.Error() == "sql: no rows in result set" {
+		// 	return false, nil
+		// }
 		return false, err
 	}
 	return true, nil
