@@ -5,7 +5,7 @@
     {{ template "Head" .}}
     <title>Restro | Home</title>
     <style>
-        .home{
+        .home {
             height: 70vh;
         }
     </style>
@@ -19,6 +19,16 @@
         {{ template "popup" .}}
 
         <div class="">
+            {{ if .User }}
+            {{ if or (eq .User.Userole "admin") (eq .User.Userole "super")}}
+            <h2>Hi Admin: {{ .User.Username }}</h2>
+            {{else if (eq .User.Userole "customer")}}
+            <h2>Hi Customer: {{ .User.Username }}</h2>
+            {{else if (eq .User.Userole "chef")}}
+            <h2>Hi Chef: {{ .User.Username }}</h2>
+            {{end}}
+            {{ end }}
+
             <h1>Welcome to Restro Cafe</h1>
             <h3>Best food for the best peeps</h3>
         </div>
@@ -32,6 +42,18 @@
                 <li>Mark your orderId and tableId</li>
                 <li>Ask Admin for Bill</li>
             </ol>
+            {{ if .User }}
+            {{ if or (eq .User.Userole "admin") (eq .User.Userole "super")}}
+            <a class="btn btn-primary" href="/admin">Admin Page</a>
+            <a class="btn btn-primary" href="/admin/chef">Chef</a>
+            <a class="btn btn-primary" href="/admin/orders">All Orders</a>
+            {{else if (eq .User.Userole "customer")}}
+            <a class="btn btn-primary" href="/menu">Menu</a>
+            <a class="btn btn-primary" href="/user/orders">Orders</a>
+            {{else if (eq .User.Userole "chef")}}
+            <a class="btn btn-primary" href="/admin/chef">Chef</a>
+            {{end}}
+            {{ end }}
         </div>
 
 

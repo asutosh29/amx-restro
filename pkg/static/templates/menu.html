@@ -134,7 +134,7 @@
             const item_name = titleEl?.textContent?.trim() || '';
             const isVeg = item_name.includes('🟢');
 
-            const descEl = card.querySelector('.card-text');
+            const descEl = card.querySelector('.card-veg');
             const item_description = descEl?.textContent?.trim() || '';
 
             const priceEl = card.querySelector('.list-group-item');
@@ -196,28 +196,36 @@
             // li.textContent = item.price;
             // ul.appendChild(li);
             const priceDiv = document.createElement('div')
-            priceDiv.classList.add('d-flex','align-items-center')
+            priceDiv.classList.add('d-flex','align-items-center','m-1')
             const price = document.createElement('p')
             price.classList.add("fw-bold", "text-decoration-none", "list-unstyled","list-group-item")
             price.textContent = item.price
-
             priceDiv.appendChild(price)
-
             card.appendChild(priceDiv);
 
-            // btn group
-            const btnGroup = document.createElement('div');
-            btnGroup.classList.add('btn-group');
-            const qtySpan = document.createElement('span');
-            qtySpan.id = `qty-cart-${item.item_id}`;
-            qtySpan.classList.add(
-                'd-flex', 'align-items-center', 'justify-content-center', 'ps-4', 'pe-4'
-            );
-            qtySpan.textContent = `Qty: ${qty}`;
-            btnGroup.appendChild(qtySpan);
+            const qtyDiv = document.createElement('div')
+            qtyDiv.classList.add('d-flex','align-items-center','m-1')
+            const qtyElem = document.createElement('p')
+            qtyElem.classList.add("fw-bold", "text-decoration-none", "list-unstyled","list-group-item")
+            qtyElem.textContent = `Qty: ${qty}`
+            qtyDiv.appendChild(qtyElem)
+            card.appendChild(qtyDiv);
 
 
-            card.appendChild(btnGroup);
+
+            // // btn group
+            // const btnGroup = document.createElement('div');
+            // btnGroup.classList.add('btn-group');
+            // const qtySpan = document.createElement('span');
+            // qtySpan.id = `qty-cart-${item.item_id}`;
+            // qtySpan.classList.add(
+            //     'd-flex', 'align-items-center', 'justify-content-center', 'ps-4', 'pe-4'
+            // );
+            // qtySpan.textContent = `Qty: ${qty}`;
+            // btnGroup.appendChild(qtySpan);
+
+
+            // card.appendChild(btnGroup);
 
             return card;
         }
@@ -337,8 +345,13 @@
         const checkoutBtn2 = document.getElementById('checkout2')
         checkoutBtn2.addEventListener('click', (e) => {
             const instructions = instruction.value
-            const data = { instructions, cart }
-            console.log("Requesy JSON Body: ", data)
+            const new_cart = cart.map(id_qty_obj => {
+                const temp = {"id":id_qty_obj.id, "qty":id_qty_obj.qty}
+                return temp
+            }
+            )
+            const data = { instructions, cart:new_cart }
+            console.log("Requesy JSON Body: ", new_cart)
             console.log("Requesy JSON Body: ", JSON.stringify(data))
             fetch('/order', {
                 method: 'POST',
