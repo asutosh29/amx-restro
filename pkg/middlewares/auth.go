@@ -19,15 +19,19 @@ func NewUser(next http.Handler) http.Handler {
 			fmt.Println("Cookie found")
 
 			jwt_token := cookie_jwt.Value
-			_, err = jwt_utils.ValidateJWT(jwt_token)
+			jwt_claims, err := jwt_utils.ValidateJWT(jwt_token)
 			if err == nil {
 				fmt.Println("Valid JWT")
-				http.Redirect(w, r, "/home", http.StatusSeeOther)
-				return
+				if IsValidUser, _ := models.UserExistsById(jwt_claims.User.UserId); IsValidUser {
+					fmt.Println("Valid user")
+					http.Redirect(w, r, "/home", http.StatusSeeOther)
+					return
+				} else {
+					next.ServeHTTP(w, r)
+				}
 			}
 
-			http.Redirect(w, r, "/home", http.StatusSeeOther)
-			return
+			next.ServeHTTP(w, r)
 		}
 
 		next.ServeHTTP(w, r)
