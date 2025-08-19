@@ -42,7 +42,7 @@ func NewUser(next http.Handler) http.Handler {
 func AdminAccessOnly(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		User := r.Context().Value("User").(types.User)
-		if !(User.Userole == "admin") && !(User.Userole == "super") {
+		if !(User.Userole == types.ROLE().ADMIN) && !(User.Userole == types.ROLE().SUPER) {
 			http.Redirect(w, r, "/login", http.StatusSeeOther)
 		}
 		next.ServeHTTP(w, r)
