@@ -9,11 +9,21 @@
 <body>
     <div class="container mt-6">
         {{template "Navbar" .}}
+        {{ $pendingOrdersExist := false }}
         <h1>CHEF page</h1>
         <div class="orders d-flex ">
             {{ range .Orders}}
-            {{template "ChefOrderCard" .}}
+                {{if or (eq (index . 0).Order_status "placed") (eq (index . 0).Order_status "cooking")}}
+                    {{ $pendingOrdersExist = true}}
+                    {{template "ChefOrderCard" .}}
+                {{end}}
             {{end}}
+
+            {{ if not $pendingOrdersExist }}
+            <div class="d-flex align-items-center justify-content-center">
+                <h2>No pending orders!</h2>
+            </div>
+            {{ end }}
         </div>
     </div>
 

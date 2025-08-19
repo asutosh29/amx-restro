@@ -14,11 +14,21 @@
 <body>
     <div class="container mt-6 shadow rounded-5 p-4 bg-mid-dark">
         {{ template "Navbar" .}}
+        {{ $pendingOrdersExist := false }}
         <h1>User Orders</h1>
         <div id="order-container" class="w-100 orders grid-container overflow-x-scroll overflow-y-scroll">
             {{ range .UserOrders}}
-                {{ template "UserOrderCard" .}}
+                {{if or (eq (index . 0).Order_status "placed") (eq (index . 0).Order_status "cooking")}}
+                    {{ $pendingOrdersExist = true}}
+                    {{ template "UserOrderCard" .}}
+                {{end}}
             {{end}}
+
+            {{ if not $pendingOrdersExist }}
+            <div class="d-flex align-items-center justify-content-center">
+                <h2>No orders!</h2>
+            </div>
+            {{ end }}
         </div>
     </div>
 
