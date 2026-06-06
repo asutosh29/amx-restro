@@ -2,17 +2,33 @@ package models
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/asutosh29/amx-restro/pkg/types"
 )
 
 func GetItems(idString string) ([]types.Item, error) {
+	idParts := strings.Split(idString, ",")
+	placeholders := make([]string, len(idParts))
+	args := make([]interface{}, len(idParts))
+	for i, id := range idParts {
+		placeholders[i] = "?"
+		args[i] = id
+	}
+
 	q := fmt.Sprintf(`
     SELECT item_id, items.category_id, item_name, item_description, img_url, price, isVeg
     FROM items
     WHERE item_id IN (%s)
-`, idString)
-	rows, _ := DB.Query(q)
+`, strings.Join(placeholders, ","))
+	rows, err := DB.Query(q, args...)
+	if err != nil {
+		fmt.Println("Error fetching items")
+		fmt.Println(err)
+		return []types.Item{}, err
+	}
+	defer rows.Close()
+
 	var ItemList []types.Item
 
 	for rows.Next() {

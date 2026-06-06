@@ -6,6 +6,7 @@ import (
 	"slices"
 
 	"github.com/asutosh29/amx-restro/pkg/models"
+	"github.com/asutosh29/amx-restro/pkg/types"
 	"github.com/asutosh29/amx-restro/pkg/utils/config"
 	"github.com/asutosh29/amx-restro/pkg/utils/session_utils"
 	"github.com/asutosh29/amx-restro/pkg/views"
@@ -51,6 +52,20 @@ func RenderAdminOrders(w http.ResponseWriter, r *http.Request) {
 		}
 		orderCounts[orderGroup[0].Order_status]++
 	}
+
+	// Sort: paid orders always at the bottom
+	slices.SortStableFunc(allOrderGroups, func(a, b []types.OrderItem) int {
+		if len(a) == 0 || len(b) == 0 {
+			return 0
+		}
+		if a[0].Order_status == "paid" && b[0].Order_status != "paid" {
+			return 1
+		}
+		if a[0].Order_status != "paid" && b[0].Order_status == "paid" {
+			return -1
+		}
+		return 0
+	})
 
 	allOrders := allOrderGroups
 
