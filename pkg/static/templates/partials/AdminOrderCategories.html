@@ -1,17 +1,20 @@
 {{ define "AdminOrderCategories" }}
-<div class="app-toolbar">
-    <div class="app-toolbar-group">
+<div class="admin-orders-filters app-panel-muted mb-4">
+    <div class="d-flex flex-wrap align-items-center gap-2">
+        <p class="admin-orders-filter-label mb-0">Filter by status</p>
         {{ $catg := .Category }}
         {{ range .Categories}}
-        <form class="app-pill-form" action="/admin/orders" method="get">
+        <form class="app-pill-form mb-0" action="/admin/orders" method="get">
             <input type="hidden" name="category" value="{{ . }}">
             {{ if eq . $catg}}
-            <button type="submit" class="btn app-pill active">
-                {{ . }}
+            <button type="submit" class="btn admin-orders-filter-btn active">
+                <span class="text-capitalize">{{ . }}</span>
+                <span class="badge text-bg-light">{{index $.OrderCounts .}}</span>
             </button>
             {{else}}
-            <button type="submit" class="btn app-pill">
-                {{ . }}
+            <button type="submit" class="btn admin-orders-filter-btn">
+                <span class="text-capitalize">{{ . }}</span>
+                <span class="badge text-bg-light">{{index $.OrderCounts .}}</span>
             </button>
             {{end}}
         </form>

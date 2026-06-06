@@ -11,50 +11,107 @@
     {{ template "popup" .}}
     <div class="app-shell">
         <main class="container app-page">
-            <section class="app-section app-hero p-4 p-lg-5 d-flex align-items-center">
-                <div class="row g-4 align-items-center w-100">
-                    <div class="col-lg-6">
-                        <div class="app-page-header mb-0">
-                            {{ if .User }}
-                            {{ if or (eq .User.Userole "admin") (eq .User.Userole "super")}}
-                            <p class="app-page-subtitle mb-3">Hi Admin, {{ .User.Username }}</p>
-                            {{else if (eq .User.Userole "customer")}}
-                            <p class="app-page-subtitle mb-3">Hi Customer, {{ .User.Username }}</p>
-                            {{else if (eq .User.Userole "chef")}}
-                            <p class="app-page-subtitle mb-3">Hi Chef, {{ .User.Username }}</p>
-                            {{end}}
-                            {{ end }}
+            <section class="app-section p-4 p-lg-5">
+                <div class="app-page-header text-center mb-5">
+                    {{ if .User }}
+                    {{ if or (eq .User.Userole "admin") (eq .User.Userole "super")}}
+                    <p class="app-page-subtitle mb-2">Hi Admin, {{ .User.Username }}</p>
+                    {{else if (eq .User.Userole "customer")}}
+                    <p class="app-page-subtitle mb-2">Hi Customer, {{ .User.Username }}</p>
+                    {{else if (eq .User.Userole "chef")}}
+                    <p class="app-page-subtitle mb-2">Hi Chef, {{ .User.Username }}</p>
+                    {{end}}
+                    {{ end }}
+                    <h1 class="app-page-title">Welcome to Restro Cafe</h1>
+                    <p class="app-page-subtitle">Best food for the best peeps.</p>
+                </div>
 
-                            <h1 class="app-page-title">Welcome to Restro Cafe</h1>
-                            <p class="app-page-subtitle">Best food for the best peeps.</p>
+                <div class="row g-4 mb-5">
+                    <div class="col-md-4">
+                        <div class="app-panel p-4 text-center h-100">
+                            <div class="mb-3">
+                                <span class="app-kv-value" style="font-size: 2rem;">🍽️</span>
+                            </div>
+                            <h3 class="h5 mb-2">Browse Menu</h3>
+                            <p class="app-description mb-0">Explore our delicious selection of dishes and beverages.</p>
                         </div>
                     </div>
-                    <div class="col-lg-6">
-                        <div class="app-panel p-4">
-                            <h2 class="h3 mb-3">Follow the steps and enjoy</h2>
-                            <ol class="mb-4 ps-3 text-secondary">
-                                <li>Go to Menu</li>
-                                <li>Choose your items</li>
-                                <li>Add any instructions if you want</li>
-                                <li>Click on checkout</li>
-                                <li>Note your order ID and table ID</li>
-                                <li>Ask admin for the bill</li>
-                            </ol>
-                            <div class="d-flex flex-wrap gap-2">
-                                {{ if .User }}
-                                {{ if or (eq .User.Userole "admin") (eq .User.Userole "super")}}
-                                <a class="btn btn-primary" href="/admin">Admin Page</a>
-                                <a class="btn btn-outline-secondary" href="/admin/chef">Chef</a>
-                                <a class="btn btn-outline-secondary" href="/admin/orders">All Orders</a>
-                                {{else if (eq .User.Userole "customer")}}
-                                <a class="btn btn-primary" href="/menu">Menu</a>
-                                <a class="btn btn-outline-secondary" href="/user/orders">Orders</a>
-                                {{else if (eq .User.Userole "chef")}}
-                                <a class="btn btn-primary" href="/admin/chef">Chef</a>
-                                {{end}}
-                                {{ end }}
+                    <div class="col-md-4">
+                        <div class="app-panel p-4 text-center h-100">
+                            <div class="mb-3">
+                                <span class="app-kv-value" style="font-size: 2rem;">🛒</span>
+                            </div>
+                            <h3 class="h5 mb-2">Place Order</h3>
+                            <p class="app-description mb-0">Add items to your cart and customize with special instructions.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="app-panel p-4 text-center h-100">
+                            <div class="mb-3">
+                                <span class="app-kv-value" style="font-size: 2rem;">✨</span>
+                            </div>
+                            <h3 class="h5 mb-2">Enjoy</h3>
+                            <p class="app-description mb-0">Sit back and relax while we prepare your meal fresh.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="app-panel p-4 p-lg-5 mb-5">
+                    <h2 class="h4 mb-4 text-center">How It Works</h2>
+                    <div class="row g-4">
+                        <div class="col-lg-4">
+                            <div class="d-flex gap-3">
+                                <div class="flex-shrink-0">
+                                    <span class="app-badge app-badge-veg" style="font-size: 1.1rem; padding: 0.6rem 1rem;">1</span>
+                                </div>
+                                <div>
+                                    <h4 class="h6 mb-1">Go to Menu</h4>
+                                    <p class="app-description mb-0">Browse all available items and pick your favorites.</p>
+                                </div>
                             </div>
                         </div>
+                        <div class="col-lg-4">
+                            <div class="d-flex gap-3">
+                                <div class="flex-shrink-0">
+                                    <span class="app-badge app-badge-veg" style="font-size: 1.1rem; padding: 0.6rem 1rem;">2</span>
+                                </div>
+                                <div>
+                                    <h4 class="h6 mb-1">Choose & Customize</h4>
+                                    <p class="app-description mb-0">Select quantities and add any special instructions.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="d-flex gap-3">
+                                <div class="flex-shrink-0">
+                                    <span class="app-badge app-badge-veg" style="font-size: 1.1rem; padding: 0.6rem 1rem;">3</span>
+                                </div>
+                                <div>
+                                    <h4 class="h6 mb-1">Checkout & Track</h4>
+                                    <p class="app-description mb-0">Confirm your order and track its progress in real-time.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <div class="d-flex flex-wrap justify-content-center gap-3">
+                        {{ if .User }}
+                        {{ if or (eq .User.Userole "admin") (eq .User.Userole "super")}}
+                        <a class="btn btn-primary btn-lg" href="/admin">Admin Page</a>
+                        <a class="btn btn-outline-secondary btn-lg" href="/admin/chef">Chef Queue</a>
+                        <a class="btn btn-outline-secondary btn-lg" href="/admin/orders">All Orders</a>
+                        {{else if (eq .User.Userole "customer")}}
+                        <a class="btn btn-primary btn-lg" href="/menu">Browse Menu</a>
+                        <a class="btn btn-outline-secondary btn-lg" href="/user/orders">My Orders</a>
+                        {{else if (eq .User.Userole "chef")}}
+                        <a class="btn btn-primary btn-lg" href="/admin/chef">Chef Queue</a>
+                        {{end}}
+                        {{ else }}
+                        <a class="btn btn-primary btn-lg" href="/login">Get Started</a>
+                        <a class="btn btn-outline-secondary btn-lg" href="/register">Create Account</a>
+                        {{ end }}
                     </div>
                 </div>
             </section>

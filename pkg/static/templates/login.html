@@ -2,108 +2,48 @@
 <html lang="en">
 
 <head>
-        {{ template "Head" .}}
-        <title>Restro | Login</title>
-
-
+    {{ template "Head" .}}
+    <title>Restro | Login</title>
 </head>
 
 <body>
     {{template "popup" .}}
     <div class="app-auth-shell">
-        <main class="container app-page">
-            <section class="app-section app-auth-card overflow-hidden">
-                <div class="row g-0 align-items-stretch">
-                    <div class="col-lg-5">
-                        <div class="app-auth-brand h-100 d-flex flex-column justify-content-center">
-                            <p class="app-page-subtitle mb-3">Welcome back</p>
-                            <h1 class="mb-3">Restro Cafe</h1>
-                            <p class="app-page-subtitle">Sign in to place orders, track them, or manage the restaurant from one clean dashboard.</p>
-                        </div>
+        <main class="app-auth-card app-section overflow-hidden">
+            <div class="row g-0 align-items-stretch">
+                <div class="col-lg-5">
+                    <div class="app-auth-brand h-100 d-flex flex-column justify-content-center">
+                        <p class="app-page-subtitle mb-3">Welcome back</p>
+                        <h1 class="mb-3">Restro Cafe</h1>
+                        <p class="app-page-subtitle">Sign in to place orders, track them, or manage the restaurant from one clean dashboard.</p>
                     </div>
-                    <div class="col-lg-7">
-                        <div class="app-auth-form">
-                            <div class="app-page-header">
-                                <h2 class="app-page-title mb-2">Login</h2>
-                                <p class="app-page-subtitle">Use your account to continue.</p>
-                            </div>
-                            <form action="/login" method="post">
-                                <div class="mb-3">
-                                    <label for="email" class="form-label">Email address</label>
-                                    <input type="email" class="form-control" id="email" aria-describedby="emailHelp"
-                                        name="email">
-                                </div>
-                                <div class="mb-4">
-                                    <label for="password" class="form-label">Password</label>
-                                    <input type="password" class="form-control" id="password" name="password">
-                                </div>
-                                <button type="submit" class="btn btn-primary">Login</button>
-                                <p class="mt-3 mb-0">Don't have an account? <a href="/register">Register</a></p>
-                            </form>
+                </div>
+                <div class="col-lg-7">
+                    <div class="app-auth-form">
+                        <div class="app-page-header mb-4">
+                            <h2 class="app-page-title mb-2">Login</h2>
+                            <p class="app-page-subtitle">Use your account to continue.</p>
                         </div>
+                        <form action="/login" method="post">
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email address</label>
+                                <input type="email" class="form-control" id="email" aria-describedby="emailHelp"
+                                    name="email" placeholder="you@example.com" required>
+                            </div>
+                            <div class="mb-4">
+                                <label for="password" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="password" name="password"
+                                    placeholder="Enter your password" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Login</button>
+                            <p class="mt-3 mb-0 text-center">Don't have an account? <a href="/register">Register</a></p>
+                        </form>
                     </div>
                 </div>
             </div>
         </main>
     </div>
-   {{ template "Bootstrap" .}}
-        <script>
-            // script.js File 
-            var passwordInput = document.getElementById("password");
-            var passwordMessageItems = document.getElementsByClassName("password-message-item");
-            var passwordMessage = document.getElementById("password-message");
-
-
-            passwordInput.onfocus = function () {
-                passwordMessage.style.display = "block";
-            }
-
-            // After clicking outside of password input hide the message
-            passwordInput.onblur = function () {
-                passwordMessage.style.display = "none";
-            }
-
-            passwordInput.onkeyup = function () {
-                // checking uppercase letters
-                let uppercaseRegex = /[A-Z]/g;
-                if (passwordInput.value.match(uppercaseRegex)) {
-                    passwordMessageItems[1].classList.remove("invalid");
-                    passwordMessageItems[1].classList.add("valid");
-                } else {
-                    passwordMessageItems[1].classList.remove("valid");
-                    passwordMessageItems[1].classList.add("invalid");
-                }
-
-                // checking lowercase letters
-                let lowercaseRegex = /[a-z]/g;
-                if (passwordInput.value.match(lowercaseRegex)) {
-                    passwordMessageItems[0].classList.remove("invalid");
-                    passwordMessageItems[0].classList.add("valid");
-                } else {
-                    passwordMessageItems[0].classList.remove("valid");
-                    passwordMessageItems[0].classList.add("invalid");
-                }
-
-                // checking the number
-                let numbersRegex = /[0-9]/g;
-                if (passwordInput.value.match(numbersRegex)) {
-                    passwordMessageItems[2].classList.remove("invalid");
-                    passwordMessageItems[2].classList.add("valid");
-                } else {
-                    passwordMessageItems[2].classList.remove("valid");
-                    passwordMessageItems[2].classList.add("invalid");
-                }
-
-                // Checking length of the password
-                if (passwordInput.value.length >= 8) {
-                    passwordMessageItems[3].classList.remove("invalid");
-                    passwordMessageItems[3].classList.add("valid");
-                } else {
-                    passwordMessageItems[3].classList.remove("valid");
-                    passwordMessageItems[3].classList.add("invalid");
-                }
-            }
-        </script>
+    {{ template "Bootstrap" .}}
 </body>
 
 </html>

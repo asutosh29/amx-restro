@@ -17,7 +17,7 @@
                     <h1 class="app-page-title">Chef Queue</h1>
                     <p class="app-page-subtitle">Focus on the orders that still need prep or serving.</p>
                 </div>
-                <div class="orders app-horizontal-scroll">
+                <div class="admin-orders-grid">
                     {{ range .Orders}}
                         {{if or (eq (index . 0).Order_status "placed") (eq (index . 0).Order_status "cooking")}}
                             {{ $pendingOrdersExist = true}}
@@ -38,95 +38,27 @@
 
     {{template "Bootstrap" .}}
     <script>
-        const servedBtns = Array(...document.getElementsByClassName('markServed'))
-        servedBtns.forEach(btn => {
+        document.querySelectorAll('.markCooking, .markServed').forEach(btn => {
             btn.addEventListener('click', async (e) => {
-                const element = e.target
-                const orderId = element.id
-                const cookingBtn = document.querySelectorAll(`button[id="${orderId}"]`)[0]
-
-                if (element.classList.contains('btn-primary')) {
-
-                    await fetch(`/order/served/${orderId}`, {
-                        method: "PATCH"
-                    })
-                        .then(response => response.json())
-                        .then(response => {
-                            element.classList.remove('btn-primary')
-                            element.classList.add('btn-success')
-                            cookingBtn.classList.add('btn-primary')
-                            cookingBtn.classList.remove('btn-success')
-                        })
-                        .catch(error => {
-                            console.error(e)
-                        });
-
-                }
-                else {
-
-                    await fetch(`/order/placed/${orderId}`, {
-                        method: "PATCH"
-                    })
-                        .then(response => response.json())
-                        .then(response => {
-                            element.classList.add('btn-primary')
-                            element.classList.remove('btn-success')
-
-                        })
-                        .catch(error => {
-                            console.error(e)
-                        });
-
+                const element = e.target;
+                const orderId = element.id;
+                const isCooking = element.classList.contains('markCooking');
+                
+                let endpoint = '';
+                if (isCooking) {
+                    endpoint = element.classList.contains('btn-primary') ? `/order/cooking/${orderId}` : `/order/placed/${orderId}`;
+                } else {
+                    endpoint = element.classList.contains('btn-primary') ? `/order/served/${orderId}` : `/order/placed/${orderId}`;
                 }
 
-            })
+                try {
+                    await fetch(endpoint, { method: "PATCH" });
+                    window.location.reload();
+                } catch (error) {
+                    console.error("Failed to update order status:", error);
+                }
+            });
         });
-        const cookingBtns = Array(...document.getElementsByClassName('markCooking'))
-        cookingBtns.forEach(btn => {
-            btn.addEventListener('click', async (e) => {
-                const element = e.target
-                const orderId = element.id
-
-                const servedBtn = document.querySelectorAll(`button[id="${orderId}"]`)[1]
-
-                if (element.classList.contains('btn-primary')) {
-
-                    await fetch(`/order/cooking/${orderId}`, {
-                        method: "PATCH"
-                    })
-                        .then(response => response.json())
-                        .then(response => {
-                            element.classList.remove('btn-primary')
-                            element.classList.add('btn-success')
-                            servedBtn.classList.add('btn-primary')
-                            servedBtn.classList.remove('btn-success')
-                        })
-                        .catch(error => {
-                            console.error(e)
-                        });
-
-                }
-                else {
-
-                    await fetch(`/order/placed/${orderId}`, {
-                        method: "PATCH"
-                    })
-                        .then(response => response.json())
-                        .then(response => {
-                            element.classList.add('btn-primary')
-                            element.classList.remove('btn-success')
-                        })
-                        .catch(error => {
-                            console.error(e)
-                        });
-
-                }
-
-            })
-        });
-
-
-
     </script>
 </body>
 

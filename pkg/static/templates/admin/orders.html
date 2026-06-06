@@ -10,19 +10,56 @@
     {{template "Navbar" .}}
     {{ template "popup" .}}
     <div class="app-shell">
-        <main class="container app-page">
+        <main class="container app-page admin-orders-page">
             <section class="app-section p-4 p-lg-5">
                 <div class="app-page-header">
                     <h1 class="app-page-title">Manage Orders</h1>
                     <p class="app-page-subtitle">Review orders by status and update the service flow.</p>
                 </div>
+                <div class="admin-orders-summary row g-3 mb-4">
+                    <div class="col-6 col-xl-3">
+                        <article class="app-panel admin-orders-summary-card h-100">
+                            <p class="admin-orders-summary-label">Placed</p>
+                            <p class="admin-orders-summary-value">{{index .OrderCounts "placed"}}</p>
+                            <p class="admin-orders-summary-note mb-0">Orders waiting to start.</p>
+                        </article>
+                    </div>
+                    <div class="col-6 col-xl-3">
+                        <article class="app-panel admin-orders-summary-card h-100">
+                            <p class="admin-orders-summary-label">Cooking</p>
+                            <p class="admin-orders-summary-value">{{index .OrderCounts "cooking"}}</p>
+                            <p class="admin-orders-summary-note mb-0">Active kitchen workload.</p>
+                        </article>
+                    </div>
+                    <div class="col-6 col-xl-3">
+                        <article class="app-panel admin-orders-summary-card h-100">
+                            <p class="admin-orders-summary-label">Served</p>
+                            <p class="admin-orders-summary-value">{{index .OrderCounts "served"}}</p>
+                            <p class="admin-orders-summary-note mb-0">Ready for billing follow-up.</p>
+                        </article>
+                    </div>
+                    <div class="col-6 col-xl-3">
+                        <article class="app-panel admin-orders-summary-card h-100">
+                            <p class="admin-orders-summary-label">Billed</p>
+                            <p class="admin-orders-summary-value">{{index .OrderCounts "billed"}}</p>
+                            <p class="admin-orders-summary-note mb-0">Awaiting payment closure.</p>
+                        </article>
+                    </div>
+                </div>
                 {{template "AdminOrderCategories" .}}
-                <div id="admin-orders" class="orders app-horizontal-scroll">
+                <div id="admin-orders" class="admin-orders-grid">
+                    {{if .Orders}}
                     {{range .Orders}}
                     {{ template "AdminOrderCard" . }}
                     {{ end }}
+                    {{else}}
+                    <div class="app-empty-state app-panel admin-orders-empty">
+                        <h2 class="h4 mb-2">No orders in this view</h2>
+                        <p class="mb-0">Try another status filter or check back once new orders arrive.</p>
+                    </div>
+                    {{end}}
                 </div>
-                <div id="pageBtns" class="d-flex align-items-center justify-content-center pt-3">
+                <div id="pageBtns" class="admin-orders-pagination d-flex align-items-center justify-content-center pt-4">
                 </div>
             </section>
         </main>
@@ -139,6 +176,7 @@
                     .then(response => {
                         element.classList.add('btn-success')
                         element.classList.remove('btn-danger')
+                        element.classList.remove('btn-outline-secondary')
                         cookingBtn.classList.add('btn-primary')
                         cookingBtn.classList.remove('btn-success')
                         servedBtn.classList.add('btn-primary')

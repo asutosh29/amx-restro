@@ -6,7 +6,6 @@ import (
 	"slices"
 
 	"github.com/asutosh29/amx-restro/pkg/models"
-	"github.com/asutosh29/amx-restro/pkg/types"
 	"github.com/asutosh29/amx-restro/pkg/utils/config"
 	"github.com/asutosh29/amx-restro/pkg/utils/session_utils"
 	"github.com/asutosh29/amx-restro/pkg/views"
@@ -31,21 +30,33 @@ func RenderAdminHome(w http.ResponseWriter, r *http.Request) {
 func RenderAdminOrders(w http.ResponseWriter, r *http.Request) {
 
 	// TODO: Pagination Logic when writing frontend
-	var allOrders [][]types.OrderItem
 	params := r.URL.Query()
 	statusName := params.Get("category")
 	statusList := config.ValidStatus
+	orderCounts := make(map[string]int, len(statusList)+1)
+
+	allOrderGroups, err := models.GetAllOrdersByOrder()
+	if err != nil {
+		fmt.Println("Error Fetching all orders")
+		fmt.Println(err)
+	}
+
+	orderCounts["all"] = len(allOrderGroups)
+	for _, status := range statusList {
+		orderCounts[status] = 0
+	}
+	for _, orderGroup := range allOrderGroups {
+		if len(orderGroup) == 0 {
+			continue
+		}
+		orderCounts[orderGroup[0].Order_status]++
+	}
+
+	allOrders := allOrderGroups
 
 	// For Invalid status show all orders
 	IsValidStatus := slices.Contains(statusList, statusName)
-	if !IsValidStatus {
-		temp, err := models.GetAllOrdersByOrder()
-		allOrders = temp
-		if err != nil {
-			fmt.Println("Error Fetching all orders")
-			fmt.Println(err)
-		}
-	} else {
+	if IsValidStatus {
 		temp, err := models.GetAllOrdersByOrderByStatus(statusName)
 		allOrders = temp
 		if err != nil {
@@ -64,6 +75,7 @@ func RenderAdminOrders(w http.ResponseWriter, r *http.Request) {
 	}
 	data["User"] = User
 	data["Orders"] = allOrders
+	data["OrderCounts"] = orderCounts
 
 	statusList = append([]string{"all"}, statusList...)
 	data["Categories"] = statusList
