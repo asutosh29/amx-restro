@@ -1,6 +1,6 @@
 services:
   restro_db:
-    image: mysql:latest
+    image: mysql:8.0
     container_name: restrodb_container
     environment:
       MYSQL_DATABASE: restro_db

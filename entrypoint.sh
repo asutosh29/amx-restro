@@ -7,7 +7,7 @@ echo "Database is ready."
 
 # Run the migrations
 echo "Running database migrations..."
-migrate -database "mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@tcp(restro_db:3306)/${MYSQL_DATABASE}" -path "./database/migrations" up
+migrate -database "mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@tcp(${MYSQL_HOST}:${MYSQL_PORT})/${MYSQL_DATABASE}" -path "./database/migrations" up
 
 echo "Migrations applied successfully."
 
