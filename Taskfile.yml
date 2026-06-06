@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+
+version: '3'
+
+vars:
+  GREETING: Hello, world!
+
+tasks:
+  default:
+    desc: Show this Help page
+    cmds:
+      - task help
+    silent: true
+
+  help:
+    desc: Show this Help page
+    cmds:
+      - task --list
+    silent: true
+
+  run: 
+    desc: Run restro
+    cmds:
+      - go run ./cmd/main.go
+    silent: true
+  
+  db:up:
+    desc: Start the database
+    cmds:
+      - docker compose -f docker/docker-compose.db.yaml up -d
+    silent: true
+
+  db:down:
+    desc: Stop the database
+    cmds:
+      - docker compose -f docker/docker-compose.db.yaml down
+    silent: true
