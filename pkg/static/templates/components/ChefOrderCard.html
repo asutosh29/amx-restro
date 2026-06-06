@@ -1,53 +1,45 @@
 {{define "ChefOrderCard"}}
 {{ if or (eq (index . 0).Order_status "placed") (eq (index . 0).Order_status "cooking") }}
-<div class="d-flex flex-column align-items-center box-shadow p-3 card-box mx-2 bg-mid-dark">
-    <div class="d-flex gap-2 justify-content-center flex-column">
-        <h4>
-            order ID: {{ (index . 0).OrderID }}
-        </h4>
-        <div class="btns">
-            {{ if eq (index . 0).Order_status "cooking" }}
-            <button class="btn btn-sm btn-success markCooking" type="submit" id="{{ (index . 0).OrderID }}">Mark order
-                cooking</button>
-            {{ else }}
-            <button class="btn btn-sm btn-primary markCooking" type="submit" id="{{ (index . 0).OrderID }}">Mark order
-                cooking</button>
-            {{ end }}
+<div class="app-order-card card-box">
+    <div class="app-order-card-header">
+        <div>
+            <h3 class="app-order-card-title">Order #{{ (index . 0).OrderID }}</h3>
+            <p class="app-page-subtitle mb-0">Kitchen queue item ready for action.</p>
+        </div>
+        <span class="app-status app-status-{{(index . 0).Order_status}}">{{(index . 0).Order_status}}</span>
+    </div>
 
-            {{ if eq (index . 0).Order_status "served" }}
-            <button class="btn btn-sm btn-success markServed" type="submit" id="{{ (index . 0).OrderID }}">Mark order
-                served</button>
-            {{ else }}
-            <button class="btn btn-sm btn-primary markServed" type="submit" id="{{ (index . 0).OrderID }}">Mark order
-                served</button>
+    <div class="app-action-stack">
+        {{ if eq (index . 0).Order_status "cooking" }}
+        <button class="btn btn-sm btn-success markCooking" type="submit" id="{{ (index . 0).OrderID }}">Mark Cooking</button>
+        {{ else }}
+        <button class="btn btn-sm btn-primary markCooking" type="submit" id="{{ (index . 0).OrderID }}">Mark Cooking</button>
+        {{ end }}
+
+        {{ if eq (index . 0).Order_status "served" }}
+        <button class="btn btn-sm btn-success markServed" type="submit" id="{{ (index . 0).OrderID }}">Mark Served</button>
+        {{ else }}
+        <button class="btn btn-sm btn-primary markServed" type="submit" id="{{ (index . 0).OrderID }}">Mark Served</button>
+        {{ end }}
+    </div>
+
+    <div>
+        <p class="app-section-title">Items</p>
+        <div class="app-item-list">
+            {{ range . }}
+            <div class="app-item-row">
+                <div>
+                    <p class="app-item-title">Item: {{.ItemName}}</p>
+                    <p class="app-item-subtitle">Qty: {{.Qty}}</p>
+                </div>
+            </div>
             {{ end }}
         </div>
     </div>
 
-    <div class="d-flex flex-column">
-        {{ range . }}
-        <div class="card my-1">
-            <div class="card-header bg-mid-light text-white">
-                <h6>Item: {{.ItemName}}
-                </h6>
-            </div>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item bg-light-dark text-white">Qty: {{.Qty}}</li>
-            </ul>
-
-        </div>
-        {{ end }}
-
-        <div class="card" style="width: 18rem;">
-            <div class="card-header bg-mid-light text-white">
-                Special instructions:
-            </div>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item bg-light-dark text-white">
-                    {{ (index . 0).Extra_instructions }}
-                </li>
-            </ul>
-        </div>
+    <div class="app-note">
+        <strong>Special instructions:</strong>
+        {{if (index . 0).Extra_instructions}} {{ (index . 0).Extra_instructions }}{{else}} No special instructions.{{end}}
     </div>
 </div>
 {{ end}}

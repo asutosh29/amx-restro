@@ -1,24 +1,26 @@
 {{define "MenuCard"}}
-<div class="card card-height card-dims m-3 p-2 bg-mid-light text-white shadow-lg rounded-3" id="item-{{.Item_id}}">
-    <img src="/images/items/default.jpg" class="card-img-top rounded-3" alt="{{.Item_name}}">
-    <div class="card-body">
-        <h5 class="card-title">
-            {{ .Item_name }}
-        </h5>
-        <h5 class="card-veg">
-            {{if .IsVeg }}🟢{{else}}🔴{{end}}
-        </h5>
-        <p class="card-text" style="-webkit-line-clamp: 3;line-clamp:3;">
-            {{.Item_description }}
-        </p>
-        <p class="fw-bold text-decoration-none list-unstyled list-group-item">Price: {{.Price }}
-        </p>
-    </div>
-
-    <div class="btn-group" role="group" aria-label="Basic mixed styles example">
-        <button type="button" class="btn btn-danger lefts" id="{{.Item_id}}">-</button>
-        <span id="qty-{{.Item_id}}" class="d-flex align-items-center justify-content-center ps-4 pe-4">0</span>
-        <button type="button" class="btn btn-success rights" id="{{.Item_id}}">+</button>
+<div class="card app-menu-card shadow-sm" id="item-{{.Item_id}}" data-is-veg="{{.IsVeg}}">
+    <img src="/images/items/default.jpg" class="card-img-top app-menu-media" alt="{{.Item_name}}">
+    <div class="card-body d-flex flex-column gap-3">
+        <div class="d-flex flex-column gap-2">
+            <div class="d-flex align-items-start justify-content-between gap-2">
+                <h5 class="card-title mb-0">{{ .Item_name }}</h5>
+                <span class="app-badge card-veg {{if .IsVeg}}app-badge-veg{{else}}app-badge-nonveg{{end}}">
+                    {{if .IsVeg }}Veg{{else}}Non-veg{{end}}
+                </span>
+            </div>
+            <p class="card-text app-description card-description mb-0">
+                {{.Item_description }}
+            </p>
+        </div>
+        <div class="d-flex align-items-center justify-content-between gap-3 mt-auto">
+            <p class="fw-bold text-decoration-none list-unstyled list-group-item mb-0">Price: {{.Price }}</p>
+        </div>
+        <div class="app-stepper" role="group" aria-label="Update quantity">
+            <button type="button" class="btn btn-outline-secondary lefts" id="{{.Item_id}}">-</button>
+            <span id="qty-{{.Item_id}}" class="app-qty">0</span>
+            <button type="button" class="btn btn-primary rights" id="{{.Item_id}}">+</button>
+        </div>
     </div>
 </div>
 

@@ -1,65 +1,64 @@
 {{define "UserOrderCard"}}
-<div class="border border-1 border-opacity-25 border-white rounded-4 shadow d-flex flex-column align-items-center p-3 m-2" >
-    <div class="container d-flex gap-2 justify-content-center  flex-column m-1 px-3 py-1">
-
-
-        <h5>Order ID: {{ with index . 0}} {{.OrderID}} {{end}}</h5>
-        <h5>Table ID: {{ with index . 0}} {{.TableID}} {{end}}</h5>
-        <h5>Order status:{{ with index . 0}} {{.Order_status}} {{end}}</h5>
-        <h6>
-            {{ with index . 0 }}
-            {{ if eq .Order_status "billed" }}
-            <h6>Please ask admin for Bill</h6>
-            {{end}}
-
-            {{ if eq .Order_status "paid" }}
-            <h6 class="m-0">Bill Paid. Thanks for ordering with us!</h6>
-            <p class="m-0">Please visit us again! </p>
-            {{end}}
-
-            {{ end }}
-        </h6>
-
+<div class="app-order-card">
+    {{ with index . 0}}
+    <div class="app-order-card-header">
+        <div>
+            <h3 class="app-order-card-title">Order #{{.OrderID}}</h3>
+            <p class="app-page-subtitle mb-0">Track the latest progress of this table order.</p>
+        </div>
+        <span class="app-status app-status-{{.Order_status}}">{{.Order_status}}</span>
     </div>
 
-    <div id="items" class="container box-in d-flex flex-column h-100 m-1">
-        <div class="container d-flex flex-column overflow-y-auto ">
-            <h4>Items:</h4>
+    <div class="app-meta-grid">
+        <div class="app-kv">
+            <p class="app-kv-label">Order ID</p>
+            <p class="app-kv-value">{{.OrderID}}</p>
+        </div>
+        <div class="app-kv">
+            <p class="app-kv-label">Table ID</p>
+            <p class="app-kv-value">{{.TableID}}</p>
+        </div>
+        <div class="app-kv">
+            <p class="app-kv-label">Total Amount</p>
+            <p class="app-kv-value">₹ {{.Total_amount}}</p>
+        </div>
+    </div>
+
+    {{ if eq .Order_status "billed" }}
+    <div class="app-note">Please ask admin for the bill to complete this order.</div>
+    {{end}}
+    {{ if eq .Order_status "paid" }}
+    <div class="app-note">Bill paid. Thanks for ordering with us. Please visit again.</div>
+    {{end}}
+    {{ end }}
+
+    <div>
+        <p class="app-section-title">Items</p>
+        <div class="app-item-list">
             {{ range . }}
-            <div class="card bg-mid-dark text-white">
-                <div class="card-header bg-mid-light">
-                    Item: {{.ItemName}}
+            <div class="app-item-row">
+                <div>
+                    <p class="app-item-title">Item: {{.ItemName}}</p>
+                    <p class="app-item-subtitle">Qty: {{.Qty}}</p>
                 </div>
-                <ul class="list-group list-group-flush bg-mid-light text-white">
-                    <li class="list-group-item bg-light-dark text-white">Qty: {{.Qty}} Price: {{.Price}}
-                </ul>
+                <p class="app-item-title mb-0">₹ {{.Price}}</p>
             </div>
             {{end}}
         </div>
-
-
     </div>
+
     {{ with index . 0}}
-    <div class="card">
-        <div class="card-header bg-mid-light text-white">
-            Total Amount:
-        </div>
-        <ul class="list-group list-group-flush">
-            <li class="list-group-item bg-light-dark text-white">
-                <b> ₹ {{.Total_amount}} </b>
-        </ul>
-    </div>
-    <div class="accordion" id="accordionExample">
+    <div class="accordion" id="accordion-order-{{.OrderID}}">
         <div class="accordion-item w-100">
             <h2 class="accordion-header">
-                <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#collapse{{.OrderID}}" aria-expanded="true" aria-controls="collapse{{.OrderID}}">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapse{{.OrderID}}" aria-expanded="false" aria-controls="collapse{{.OrderID}}">
                     Special Instructions
                 </button>
             </h2>
-            <div id="collapse{{.OrderID}}" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+            <div id="collapse{{.OrderID}}" class="accordion-collapse collapse" data-bs-parent="#accordion-order-{{.OrderID}}">
                 <div class="accordion-body">
-                    {{.Extra_instructions}}
+                    {{if .Extra_instructions}}{{.Extra_instructions}}{{else}}No special instructions.{{end}}
                 </div>
             </div>
         </div>

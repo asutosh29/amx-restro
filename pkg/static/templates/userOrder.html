@@ -3,33 +3,37 @@
 
 <head>
     {{ template "Head" .}}
-    <title>Restro | Admin</title>
-    <style>
-        #order-container {
-            height: calc(100vh - 12rem);
-        }
-    </style>
+    <title>Restro | Orders</title>
 </head>
 
 <body>
-    <div class="container mt-6 shadow rounded-5 p-4 bg-mid-dark">
-        {{ template "Navbar" .}}
-        {{ $pendingOrdersExist := false }}
-        <h1>User Orders</h1>
-        <div id="order-container" class="w-100 orders grid-container overflow-x-scroll overflow-y-scroll">
-            {{ range .UserOrders}}
-                {{if or (eq (index . 0).Order_status "placed") (eq (index . 0).Order_status "cooking")}}
-                    {{ $pendingOrdersExist = true}}
-                    {{ template "UserOrderCard" .}}
-                {{end}}
-            {{end}}
+    {{ template "Navbar" .}}
+    {{ template "popup" .}}
+    <div class="app-shell">
+        <main class="container app-page">
+            <section class="app-section p-4 p-lg-5">
+                {{ $pendingOrdersExist := false }}
+                <div class="app-page-header">
+                    <h1 class="app-page-title">User Orders</h1>
+                    <p class="app-page-subtitle">Track your placed and in-progress orders.</p>
+                </div>
+                <div id="order-container" class="w-100 orders app-order-grid app-scroll-panel">
+                    {{ range .UserOrders}}
+                        {{if or (eq (index . 0).Order_status "placed") (eq (index . 0).Order_status "cooking")}}
+                            {{ $pendingOrdersExist = true}}
+                            {{ template "UserOrderCard" .}}
+                        {{end}}
+                    {{end}}
 
-            {{ if not $pendingOrdersExist }}
-            <div class="d-flex align-items-center justify-content-center">
-                <h2>No orders!</h2>
-            </div>
-            {{ end }}
-        </div>
+                    {{ if not $pendingOrdersExist }}
+                    <div class="app-empty-state app-panel-muted">
+                        <h2 class="h4 mb-2">No active orders</h2>
+                        <p class="mb-0">When you place an order, it will show up here.</p>
+                    </div>
+                    {{ end }}
+                </div>
+            </section>
+        </main>
     </div>
 
     {{ template "Bootstrap" .}}

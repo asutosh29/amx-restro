@@ -4,20 +4,6 @@
 <head>
     {{ template "Head" .}}
     <title>Restro | Menu</title>
-    <style>
-        #bottom {
-            display: none;
-        }
-
-        #menu-container,
-        #cart-container {
-            height: calc(100vh - 12rem);
-        }
-
-        #cart_items {
-            height: calc(100vh - 28rem);
-        }
-    </style>
 </head>
 
 <body>
@@ -28,7 +14,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel">Confirmations</h1>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <p>Please confirm your order before placing it</p>
@@ -41,37 +27,51 @@
         </div>
     </div>
     {{ template "Navbar" . }}
-    {{ template "Categories" . }}
+    {{ template "popup" .}}
+    <div class="app-shell">
+        <main class="container app-page">
+            <div class="app-page-header">
+                <h1 class="app-page-title">Menu</h1>
+                <p class="app-page-subtitle">Browse categories, search quickly, and build the order from one place.</p>
+            </div>
+            {{ template "Categories" . }}
 
-    <div id="menuMain" class=" container d-flex mt-6 vw-100">
-        <div class="container Menu w-75 " >
-            <h1>Menu</h1>
-            <div id="menu-container"
-                class="d-flex justify-content-center flex-row gap-2 p-3 box-shadow overflow-y-scroll bg-mid-dark rounded-5 p-1">
-                <div id="menu" class="menu-card-container d-flex flex-wrap justify-content-center gap-2">
-                    {{ range .Items}}
-                    {{ template "MenuCard" .}}
-                    {{end}}
+            <div id="menuMain" class="row g-4 align-items-start">
+                <div class="col-xl-8 col-lg-7">
+                    <section class="app-section p-3 p-lg-4">
+                        <div id="menu-container" class="app-scroll-panel">
+                            <div id="menu" class="menu-card-container d-flex flex-wrap justify-content-center gap-3">
+                                {{ range .Items}}
+                                {{ template "MenuCard" .}}
+                                {{end}}
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                <div id="cart" class="col-xl-4 col-lg-5">
+                    <section class="app-section p-3 p-lg-4 app-sticky">
+                        <div class="app-page-header mb-3">
+                            <h2 class="h2 mb-1">Cart</h2>
+                            <p class="app-page-subtitle">Your selected items and checkout details.</p>
+                        </div>
+                        <div id="cart-container">
+                            <div id="cart_items" class="app-panel-muted p-2 overflow-y-auto">
+                            </div>
+                            <div id="bottom" class="d-flex flex-column gap-3 pt-4">
+                                <h5 class="mb-0">Total Amount: <span id="total-amount">0</span></h5>
+                                <label for="instruction" class="form-label mb-0">Any specific instructions?</label>
+                                <textarea name="instruction" class="form-control"
+                                    id="instruction">No special instructions</textarea>
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" id="checkout"
+                                    data-bs-target="#exampleModal">
+                                    Checkout
+                                </button>
+                            </div>
+                        </div>
+                    </section>
                 </div>
             </div>
-        </div>
-        <div id="cart" class="w-25 ">
-            <h1>Cart</h1>
-            <div id="cart-container" class="p-2 box-shadow bg-mid-dark rounded-5 p-1">
-                <div id="cart_items" class="box-shadow overflow-y-scroll">
-                </div>
-                <div id="bottom" class="d-flex flex-column gap-2 p-4">
-                    <h5>Total Amount: <span id="total-amount">0</span></h5>
-                    <label for="instruction" class="form-label">Any Specific instructions?</label>
-                    <textarea name="instruction" class="form-control"
-                        id="instruction">No special instructions</textarea>
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" id="checkout"
-                        data-bs-target="#exampleModal">
-                        Checkout!
-                    </button>
-                </div>
-            </div>
-        </div>
+        </main>
     </div>
 
     {{ template "Bootstrap" . }}
@@ -134,9 +134,9 @@
 
             const titleEl = card.querySelector('.card-title');
             const item_name = titleEl?.textContent?.trim() || '';
-            const isVeg = item_name.includes('🟢');
+            const isVeg = card.dataset.isVeg === 'true';
 
-            const descEl = card.querySelector('.card-veg');
+            const descEl = card.querySelector('.card-description');
             const item_description = descEl?.textContent?.trim() || '';
 
             const priceEl = card.querySelector('.list-group-item');
@@ -169,42 +169,37 @@
 
             // card container
             const card = document.createElement('div');
-            card.classList.add('card', 'm-3', 'p-2', 'bg-mid-light','text-white','shadow-lg', 'rounded-3','d-flex', 'flex-row', 'align-items-centre' ,'justify-content-center');
-            card.style.width = '18rem';
+            card.classList.add('app-cart-card');
             card.id = `item-${item.item_id}`;
 
             // body
             const body = document.createElement('div');
-            body.classList.add('card-body');
+            body.classList.add('d-flex', 'flex-column', 'gap-2', 'flex-grow-1');
 
             const title = document.createElement('h5');
-            title.classList.add('card-title');
+            title.classList.add('card-title', 'mb-0');
             title.textContent = item.item_name;
             body.appendChild(title);
 
             const desc = document.createElement('p');
-            desc.classList.add('card-text');
+            desc.classList.add('card-text', 'app-description', 'mb-0');
             desc.textContent = item.item_description;
             body.appendChild(desc);
 
 
             card.appendChild(body);
 
-            const priceDiv = document.createElement('div')
-            priceDiv.classList.add('d-flex','align-items-center','m-1')
+            const meta = document.createElement('div')
+            meta.classList.add('app-cart-meta')
             const price = document.createElement('p')
-            price.classList.add("fw-bold", "text-decoration-none", "list-unstyled","list-group-item")
+            price.classList.add("fw-bold", "mb-0")
             price.textContent = item.price
-            priceDiv.appendChild(price)
-            card.appendChild(priceDiv);
-
-            const qtyDiv = document.createElement('div')
-            qtyDiv.classList.add('d-flex','align-items-center','m-1')
+            meta.appendChild(price)
             const qtyElem = document.createElement('p')
-            qtyElem.classList.add("fw-bold", "text-decoration-none", "list-unstyled","list-group-item")
+            qtyElem.classList.add("mb-0")
             qtyElem.textContent = `Qty: ${qty}`
-            qtyDiv.appendChild(qtyElem)
-            card.appendChild(qtyDiv);
+            meta.appendChild(qtyElem)
+            card.appendChild(meta);
 
             return card;
         }
@@ -221,6 +216,15 @@
             }
             const cartDiv = document.getElementById('cart_items')
             cartDiv.innerText = ''
+            if (cart.length === 0) {
+                cartDiv.innerHTML = `
+                    <div class="app-empty-state">
+                        <h3 class="h5 mb-2">Your cart is empty</h3>
+                        <p class="mb-0">Add a few dishes from the menu to start building an order.</p>
+                    </div>
+                `
+                return
+            }
             cart.forEach(item => {
                 const cardItem = createCartCard(item.id)
                 if (!cardItem) {
@@ -241,8 +245,11 @@
             let total = 0;
 
             cart.forEach(item => {
-                const itemData = getCartCardData(item.id);
-                if (itemData && itemData.price) {
+                const itemData = item.info || getCartCardData(item.id);
+                if (itemData) {
+                    if (!item.info) {
+                        item.info = itemData
+                    }
                     const price = extractPriceFromText(itemData.price);
                     total += price * item.qty;
                 }
@@ -301,6 +308,7 @@
                 qtyInt += 1;
                 if (item) {
                     item.qty = qtyInt
+                    item.info = getCartCardData(id) || item.info
                 } else {
                     cart.push({ id: id, qty: qtyInt, info: getCartCardData(id) })
                 }
@@ -321,6 +329,7 @@
                 qtyInt -= 1;
                 if (item) {
                     item.qty = qtyInt
+                    item.info = getCartCardData(id) || item.info
                 } else {
                     cart.push({ id: id, qty: qtyInt, info: getCartCardData(id) })
                 }

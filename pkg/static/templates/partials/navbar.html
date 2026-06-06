@@ -1,26 +1,30 @@
 {{define "Navbar"}}
-<nav class="navbar fixed-top navbar-expand-lg p-1" data-bs-theme="dark">
-    <div class="container-fluid">
+<nav class="navbar fixed-top navbar-expand-lg py-3" data-bs-theme="light">
+    <div class="container app-page">
         <a class="navbar-brand" href="/home">Restro</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse position-relative z-3" id="navbarNav">
-            <ul class="navbar-nav">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-lg-2">
                 {{ if .User }}
                 <li class="nav-item">
                     <a class="nav-link" href="/menu">Menu</a>
                 </li>
-                <li>
+                <li class="nav-item">
                     <a class="nav-link" href="/user/orders">Orders</a>
                 </li>
-                <li class="nav-item dropdown  ">
+                {{ end }}
+            </ul>
+            <ul class="navbar-nav mb-2 mb-lg-0">
+                {{ if .User }}
+                <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                         aria-expanded="false">
                         {{ .User.Username }}
                     </a>
-                    <ul class="dropdown-menu z-3">
+                    <ul class="dropdown-menu dropdown-menu-end z-3">
                         {{ if or (eq .User.Userole "admin") (eq .User.Userole "super")}}
                         <li><a class="dropdown-item" href="/admin">Admin Page</a></li>
                         <li><a class="dropdown-item" href="/admin/chef">Chef</a></li>
@@ -31,15 +35,12 @@
                         <li>
                             <hr class="dropdown-divider">
                         </li>
-                        <li><a class="nav-link active" aria-current="page" href="/logout">Logout</a></li>
+                        <li><a class="dropdown-item" aria-current="page" href="/logout">Logout</a></li>
                     </ul>
                 </li>
                 {{ end }}
             </ul>
-
-
         </div>
     </div>
-
 </nav>
 {{end}}

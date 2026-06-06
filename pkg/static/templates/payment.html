@@ -3,20 +3,40 @@
 
 <head>
     {{ template "Head" .}}
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Restr | Payment</title>
+    <title>Restro | Payment</title>
 </head>
 
 <body>
     {{ template "Navbar" .}}
-    <div class="container mt-6 shadow rounded-5 p-4 bg-mid-dark">
-        <h1>Order Placed Successfully</h1>
-        <p>Order id: {{ .OrderID }}</p>
-        <p>Table id: {{ .TableID }}</p>
+    {{ template "popup" .}}
+    <div class="app-shell">
+        <main class="container app-page">
+            <section class="app-section app-payment-card p-4 p-lg-5 text-center">
+                <div class="app-page-header mb-4">
+                    <h1 class="app-page-title">Order placed successfully</h1>
+                    <p class="app-page-subtitle">Your order is confirmed and has been sent to the team.</p>
+                </div>
+                <div class="row g-3 justify-content-center mb-4">
+                    <div class="col-sm-6">
+                        <div class="app-panel-muted p-3">
+                            <p class="app-kv-label mb-1">Order ID</p>
+                            <p class="app-kv-value mb-0">{{ .OrderID }}</p>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="app-panel-muted p-3">
+                            <p class="app-kv-label mb-1">Table ID</p>
+                            <p class="app-kv-value mb-0">{{ .TableID }}</p>
+                        </div>
+                    </div>
+                </div>
 
-        <a href="/user/orders"><button class="btn btn-sm btn-primary" type="submit">Check Your orders</button></a>
-        <a href="/menu"><button class="btn btn-sm btn-primary" type="submit">Create New Order</button></a>
+                <div class="d-flex flex-wrap justify-content-center gap-3">
+                    <a class="btn btn-primary" href="/user/orders">Check Your Orders</a>
+                    <a class="btn btn-outline-secondary" href="/menu">Create New Order</a>
+                </div>
+            </section>
+        </main>
     </div>
     {{ template "Bootstrap" .}}
 </body>

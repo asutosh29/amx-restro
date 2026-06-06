@@ -7,47 +7,59 @@
 </head>
 
 <body>
-    <div class="container mt-5">
-        {{ template "Navbar" .}}
-        <h1>Admin page</h1>
-        <h2>Manage All Users</h2>
-        <div class="container d-flex flex-wrap">
-            {{ $root := . }}
-            {{ range $i, $u := .Users }}
-            <div class="card card-box m-3 bg-mid-light text-white">
-                <div class="card-header bg-mid-light text-white fw-bold">
-                    {{$u.Username}}
+    {{ template "Navbar" .}}
+    {{ template "popup" .}}
+    <div class="app-shell">
+        <main class="container app-page">
+            <section class="app-section p-4 p-lg-5">
+                <div class="app-page-header">
+                    <h1 class="app-page-title">Manage Users</h1>
+                    <p class="app-page-subtitle">Review user details and assign admin access when needed.</p>
                 </div>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item bg-mid-light text-white">Fullname: {{$u.FirstName}} {{$u.LastName}}
-                    </li>
-                    <li class="list-group-item bg-mid-light text-white">Contact: {{$u.Contact}}
-                    </li>
-                    <li class="list-group-item bg-mid-light text-white">userID: {{$u.UserId}}
-                    </li>
-                    <li class="list-group-item bg-mid-light text-white">userRole: {{$u.Userole}}
-                    </li>
-                </ul>
-                <div class="container bg-mid-light text-white">
-                    {{if eq $root.User.Userole "super"}}
-
-                    {{if ne $u.Userole "super"}}
-                    {{if ne $u.Userole "admin"}}
-                    <button class="btn btn-primary admin" type="submit" id="{{$u.UserId}}">Make Admin
-                        user</button>
-                    {{else}}
-                    <button class="btn btn-primary adminRevoke" type="submit" id="{{$u.UserId}}">Remove Admin
-                        user</button>
-                    {{end}}
-                    {{end}}
-
-
+                <div class="app-user-grid">
+                    {{ $root := . }}
+                    {{ range $i, $u := .Users }}
+                    <div class="app-order-card app-user-card">
+                        <div class="app-order-card-header">
+                            <div>
+                                <h3 class="app-order-card-title">{{$u.Username}}</h3>
+                                <p class="app-page-subtitle mb-0 text-capitalize">{{$u.Userole}}</p>
+                            </div>
+                        </div>
+                        <div class="app-meta-grid">
+                            <div class="app-kv">
+                                <p class="app-kv-label">Full Name</p>
+                                <p class="app-kv-value">{{$u.FirstName}} {{$u.LastName}}</p>
+                            </div>
+                            <div class="app-kv">
+                                <p class="app-kv-label">Contact</p>
+                                <p class="app-kv-value">{{$u.Contact}}</p>
+                            </div>
+                            <div class="app-kv">
+                                <p class="app-kv-label">User ID</p>
+                                <p class="app-kv-value">{{$u.UserId}}</p>
+                            </div>
+                            <div class="app-kv">
+                                <p class="app-kv-label">Role</p>
+                                <p class="app-kv-value text-capitalize">{{$u.Userole}}</p>
+                            </div>
+                        </div>
+                        {{if eq $root.User.Userole "super"}}
+                        {{if ne $u.Userole "super"}}
+                        <div class="app-action-stack mt-auto">
+                            {{if ne $u.Userole "admin"}}
+                            <button class="btn btn-primary admin" type="submit" id="{{$u.UserId}}">Make Admin</button>
+                            {{else}}
+                            <button class="btn btn-outline-secondary adminRevoke" type="submit" id="{{$u.UserId}}">Remove Admin</button>
+                            {{end}}
+                        </div>
+                        {{end}}
+                        {{end}}
+                    </div>
                     {{end}}
                 </div>
-            </div>
-
-            {{end}}
-        </div>
+            </section>
+        </main>
     </div>
 
     {{template "Bootstrap" .}}

@@ -8,19 +8,40 @@
 
 <body>
     {{ template "Navbar" . }}
-    <div class="container mt-6">
-        <h1>Profile page</h1>
-        <div class="information box-shadow p-3">
-            {{ if .User }}
-            <h5>username: {{.User.Username}}</h5>
-            <h5>email: {{.User.Email}}</h5>
-            <h5>full name: {{.User.FirstName}} {{.User.LastName}}</h5>
-            {{ if ne .User.Userole "customer"}}
-            <h5>Role: {{.User.Userole}}
-            </h5>
-            {{end}}
-            {{end}}
-        </div>
+    {{ template "popup" .}}
+    <div class="app-shell">
+        <main class="container app-page">
+            <section class="app-section app-profile-card p-4 p-lg-5">
+                <div class="app-page-header">
+                    <h1 class="app-page-title">Profile</h1>
+                    <p class="app-page-subtitle">Your account details and current role.</p>
+                </div>
+                <div class="app-panel-muted p-4">
+                    {{ if .User }}
+                    <div class="app-meta-grid">
+                        <div class="app-kv">
+                            <p class="app-kv-label">Username</p>
+                            <p class="app-kv-value">{{.User.Username}}</p>
+                        </div>
+                        <div class="app-kv">
+                            <p class="app-kv-label">Email</p>
+                            <p class="app-kv-value">{{.User.Email}}</p>
+                        </div>
+                        <div class="app-kv">
+                            <p class="app-kv-label">Full Name</p>
+                            <p class="app-kv-value">{{.User.FirstName}} {{.User.LastName}}</p>
+                        </div>
+                        {{ if ne .User.Userole "customer"}}
+                        <div class="app-kv">
+                            <p class="app-kv-label">Role</p>
+                            <p class="app-kv-value text-capitalize">{{.User.Userole}}</p>
+                        </div>
+                        {{end}}
+                    </div>
+                    {{end}}
+                </div>
+            </section>
+        </main>
     </div>
 
     {{ template "Bootstrap" .}}

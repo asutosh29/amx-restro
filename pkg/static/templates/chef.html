@@ -3,28 +3,37 @@
 
 <head>
     {{template "Head" .}}
-    <title>Restro | Admin</title>
+    <title>Restro | Chef</title>
 </head>
 
 <body>
-    <div class="container mt-6">
-        {{template "Navbar" .}}
-        {{ $pendingOrdersExist := false }}
-        <h1>CHEF page</h1>
-        <div class="orders d-flex ">
-            {{ range .Orders}}
-                {{if or (eq (index . 0).Order_status "placed") (eq (index . 0).Order_status "cooking")}}
-                    {{ $pendingOrdersExist = true}}
-                    {{template "ChefOrderCard" .}}
-                {{end}}
-            {{end}}
+    {{template "Navbar" .}}
+    {{ template "popup" .}}
+    <div class="app-shell">
+        <main class="container app-page">
+            <section class="app-section p-4 p-lg-5">
+                {{ $pendingOrdersExist := false }}
+                <div class="app-page-header">
+                    <h1 class="app-page-title">Chef Queue</h1>
+                    <p class="app-page-subtitle">Focus on the orders that still need prep or serving.</p>
+                </div>
+                <div class="orders app-horizontal-scroll">
+                    {{ range .Orders}}
+                        {{if or (eq (index . 0).Order_status "placed") (eq (index . 0).Order_status "cooking")}}
+                            {{ $pendingOrdersExist = true}}
+                            {{template "ChefOrderCard" .}}
+                        {{end}}
+                    {{end}}
 
-            {{ if not $pendingOrdersExist }}
-            <div class="d-flex align-items-center justify-content-center">
-                <h2>No pending orders!</h2>
-            </div>
-            {{ end }}
-        </div>
+                    {{ if not $pendingOrdersExist }}
+                    <div class="app-empty-state app-panel-muted">
+                        <h2 class="h4 mb-2">No pending orders</h2>
+                        <p class="mb-0">New kitchen tasks will appear here as soon as customers place them.</p>
+                    </div>
+                    {{ end }}
+                </div>
+            </section>
+        </main>
     </div>
 
     {{template "Bootstrap" .}}

@@ -4,115 +4,79 @@
 <head>
     {{ template "Head" .}}
         <title>Restro | Register</title>
-
-        <style>
-            /* The message box */
-            #password-message {
-                display: none;
-                background: #ffffff;
-                color: #000;
-                position: relative;
-                padding: 20px;
-                margin-top: 10px;
-                text-align: left;
-            }
-
-            #password-message h3 {
-                font-size: 15px;
-                margin-top: 0;
-                text-transform: uppercase;
-            }
-
-            #password-message p {
-                margin: 8px 0;
-            }
-
-            .valid {
-                color: green;
-            }
-
-            .valid:before {
-                position: relative;
-                left: -35px;
-                content: "";
-            }
-
-            .invalid {
-                color: red;
-            }
-
-            .invalid:before {
-                position: relative;
-                left: -35px;
-                content: "";
-            }
-        </style>
 </head>
 
 <body>
     {{template "popup" .}}
-    <div class="d-flex justify-content-center align-items-center vh-100 flex-column ">
-        <div class="d-flex align-items-center justify-content-around box-shadow w-75 p-4">
-            <h1>RESTRO Cafe</h1>
-            <div class="w-50 p-4">
-                <h1>Register</h1>
-            
-                    <form action="/register" method="post" onSubmit="return checkPassword(this)">
-                        <div>
-                            <label for="username" class="form-label">User name</label>
-                            <input type="text" class="form-control" id="username" aria-describedby="emailHelp"
-                                name="username" required>
+    <div class="app-auth-shell">
+        <main class="container app-page">
+            <section class="app-section app-auth-card overflow-hidden">
+                <div class="row g-0 align-items-stretch">
+                    <div class="col-lg-5">
+                        <div class="app-auth-brand h-100 d-flex flex-column justify-content-center">
+                            <p class="app-page-subtitle mb-3">Create your account</p>
+                            <h1 class="mb-3">Restro Cafe</h1>
+                            <p class="app-page-subtitle">Set up a new account to place orders, follow their status, and access role-specific screens.</p>
                         </div>
-                        <div>
-                            <label for="email" class="form-label">Email address</label>
-                            <input type="email" class="form-control" id="email" aria-describedby="emailHelp"
-                                name="email" required>
+                    </div>
+                    <div class="col-lg-7">
+                        <div class="app-auth-form">
+                            <div class="app-page-header">
+                                <h2 class="app-page-title mb-2">Register</h2>
+                                <p class="app-page-subtitle">A few details and you're ready to go.</p>
+                            </div>
+                            <form action="/register" method="post" onSubmit="return checkPassword(this)">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label for="username" class="form-label">User name</label>
+                                        <input type="text" class="form-control" id="username" aria-describedby="emailHelp"
+                                            name="username" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="contact" class="form-label">Contact Number</label>
+                                        <input type="text" class="form-control" id="contact" aria-describedby="emailHelp"
+                                            name="contact" pattern="[6789][0-9]{9}" required>
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="email" class="form-label">Email address</label>
+                                        <input type="email" class="form-control" id="email" aria-describedby="emailHelp"
+                                            name="email" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="first_name" class="form-label">First name</label>
+                                        <input type="text" class="form-control" id="first_name" aria-describedby="emailHelp"
+                                            name="first_name" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="last_name" class="form-label">Last name</label>
+                                        <input type="text" class="form-control" id="last_name" aria-describedby="emailHelp"
+                                            name="last_name" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="password" class="form-label">Enter Password</label>
+                                        <input type="password" class="form-control" id="password" name="password"
+                                            pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" required>
+                                        <div id="password-message" class="app-password-panel">
+                                            <h3>Password must contain:</h3>
+                                            <p class="password-message-item invalid">At least <b>one lowercase letter</b></p>
+                                            <p class="password-message-item invalid">At least <b>one uppercase letter</b></p>
+                                            <p class="password-message-item invalid">At least <b>one number</b></p>
+                                            <p class="password-message-item invalid">Minimum <b>8 characters</b></p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="cnf-password" class="form-label">Confirm Password</label>
+                                        <input type="password" class="form-control" id="cnf-password" name="cnf-password" required>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary mt-4">Register</button>
+                                <p class="mt-3 mb-0">Already have an account? <a href="/login">Login</a></p>
+                            </form>
                         </div>
-                        <div>
-                            <label for="first_name" class="form-label">First name</label>
-                            <input type="text" class="form-control" id="first_name" aria-describedby="emailHelp"
-                                name="first_name" required>
-                        </div>
-                        <div>
-                            <label for="last_name" class="form-label">Last name</label>
-                            <input type="text" class="form-control" id="last_name" aria-describedby="emailHelp"
-                                name="last_name" required>
-                        </div>
-                        <div>
-                            <label for="contact" class="form-label">Contact Number</label>
-                            <input type="text" class="form-control" id="contact" aria-describedby="emailHelp"
-                                name="contact" pattern="[6789][0-9]{9}" required>
-                        </div>
-                        <div>
-                            <label for="password" class="form-label">Enter Password</label>
-                            <input type="password" class="form-control" id="password" name="password"
-                                pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" required>
-                        </div>
-                        <div id="password-message">
-                            <h3>Password must contain:</h3>
-                            <p class="password-message-item invalid">At least
-                                <b>one lowercase letter</b>
-                            </p>
-                            <p class="password-message-item invalid">At least
-                                <b>one uppercase letter</b>
-                            </p>
-                            <p class="password-message-item invalid">At least
-                                <b>one number</b>
-                            </p>
-                            <p class="password-message-item invalid">Minimum
-                                <b>8 characters</b>
-                            </p>
-                        </div>
-                        <div>
-                            <label for="cnf-password" class="form-label">Confirm Password</label>
-                            <input type="password" class="form-control" id="cnf-password" name="cnf-password" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary mt-2">Register</button>
-                        <p>Don't have an Account? <a href="/login">Login</a></p>
-
-                    </form>
-            </div>
-        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
     </div>
     {{ template "Bootstrap" .}}
         <script>

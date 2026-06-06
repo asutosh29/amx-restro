@@ -15,6 +15,7 @@ func Start() {
 
 	//Adding static files
 	r.PathPrefix("/images/").Handler(http.StripPrefix("/images/", http.FileServer(http.Dir("./pkg/static/images/"))))
+	r.PathPrefix("/css/").Handler(http.StripPrefix("/css/", http.FileServer(http.Dir("./pkg/static/css/"))))
 	// r.StrictSlash(true)
 	r.Use(middlewares.LogRequests)
 	// r.Use(middlewares.LoggedIn)
