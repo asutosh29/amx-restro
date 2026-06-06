@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://taskfile.dev/schema.json
 
-version: '3'
+version: "3"
 
 vars:
   GREETING: Hello, world!
@@ -18,12 +18,12 @@ tasks:
       - task --list
     silent: true
 
-  run: 
+  run:
     desc: Run restro
     cmds:
       - go run ./cmd/main.go
     silent: true
-  
+
   db:up:
     desc: Start the database
     cmds:
@@ -34,6 +34,24 @@ tasks:
     desc: Stop the database
     cmds:
       - docker compose -f docker/docker-compose.db.yaml down
+    silent: true
+
+  run:docker:
+    desc: Build and run via Docker compose
+    cmds:
+      - docker compose up --build
+    silent: true
+
+  stop:docker:
+    desc: Stop Docker compose services
+    cmds:
+      - docker compose down
+    silent: true
+
+  logs:
+    desc: Tail Docker compose logs
+    cmds:
+      - docker compose logs -f --tail=100
     silent: true
 
   deploy:

@@ -1,15 +1,23 @@
 services:
   restro_db:
     image: mysql:8.0
-    container_name: restrodb_container
+    container_name: restro_db
     environment:
-      MYSQL_ROOT_PASSWORD: root
-    env_file:
-      - .env
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_PORT: ${MYSQL_PORT}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    env_file: .env
     volumes:
       - mysql_data:/var/lib/mysql
     healthcheck:
-      test: [ "CMD-SHELL", "mysqladmin ping -h localhost -u root -p$${MYSQL_ROOT_PASSWORD}" ]
+      test:
+        [
+          "CMD-SHELL",
+          "mysqladmin ping -h localhost -u root -p$${MYSQL_ROOT_PASSWORD}",
+        ]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -20,7 +28,7 @@ services:
       context: .
       dockerfile: Dockerfile
     restart: always
-    container_name: restro_container
+    container_name: restro_app
     ports:
       - 8000:8000
     env_file: .env
