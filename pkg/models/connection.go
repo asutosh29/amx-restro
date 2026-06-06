@@ -7,17 +7,12 @@ import (
 
 	"github.com/asutosh29/amx-restro/pkg/utils/config"
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/joho/godotenv"
 )
 
 var DB *sql.DB
 
 func InitDatabase() (*sql.DB, error) {
-	// Load environment variables
-	err := godotenv.Load()
-	if err != nil {
-		fmt.Println("Warning: .env file not found")
-	}
+	var err error
 
 	// Get database connection details from environment
 	DbHost := config.Db_config.DbHost

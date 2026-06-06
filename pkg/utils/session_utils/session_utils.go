@@ -6,19 +6,14 @@ import (
 	"net/http"
 
 	"github.com/asutosh29/amx-restro/pkg/types"
+	"github.com/asutosh29/amx-restro/pkg/utils/config"
 	"github.com/gorilla/sessions"
 )
 
-// For SSR will be removed while CSR
-// var session_secret_bytes = []byte(config.SessionSecret)
-
-// REMINDER: Passing secret via config causes Hash key not found
-var session_secret_bytes = []byte("Very-secret")
 var Store *sessions.CookieStore
 
-// Store = sessions.NewCookieStore(session_secret_bytes)
 func InitiateStructSession() {
-	Store = sessions.NewCookieStore(session_secret_bytes)
+	Store = sessions.NewCookieStore([]byte(config.SessionSecret))
 
 	// TODO: Add Session ID and Order ID via this
 	registerGobTypes(

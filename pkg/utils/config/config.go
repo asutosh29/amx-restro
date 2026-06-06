@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"os"
 	"strconv"
-
-	"github.com/joho/godotenv"
 )
 
 type DbConfig struct {
@@ -27,8 +25,6 @@ var PORT int
 
 func InitConfig() {
 	var err error
-	// Load Env
-	godotenv.Load()
 
 	Db_config.DbHost = os.Getenv("MYSQL_HOST")
 	Db_config.DbUser = os.Getenv("MYSQL_USER")

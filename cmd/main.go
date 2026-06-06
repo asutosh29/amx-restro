@@ -9,9 +9,13 @@ import (
 	"github.com/asutosh29/amx-restro/pkg/utils/config"
 	"github.com/asutosh29/amx-restro/pkg/utils/session_utils"
 	"github.com/asutosh29/amx-restro/pkg/views"
+	"github.com/joho/godotenv"
 )
 
 func main() {
+	// Load .env before anything else
+	godotenv.Load()
+
 	fmt.Println("Starting server...")
 
 	// Configuring

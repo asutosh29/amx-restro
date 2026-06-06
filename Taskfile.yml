@@ -35,3 +35,9 @@ tasks:
     cmds:
       - docker compose -f docker/docker-compose.db.yaml down
     silent: true
+
+  deploy:
+    desc: Build and start the full stack on the VPS
+    cmds:
+      - docker compose up --build -d
+    silent: true

@@ -3,8 +3,9 @@ services:
     image: mysql:8.0
     container_name: restrodb_container
     environment:
-      MYSQL_DATABASE: restro_db
       MYSQL_ROOT_PASSWORD: root
+    env_file:
+      - .env
     volumes:
       - mysql_data:/var/lib/mysql
     healthcheck:
@@ -22,16 +23,7 @@ services:
     container_name: restro_container
     ports:
       - 8000:8000
-    environment:
-      MYSQL_HOST: restro_db
-      MYSQL_PORT: 3306
-      MYSQL_DATABASE: restro_db
-      MYSQL_USER: root
-      MYSQL_PASSWORD: root
-      MYSQL_ROOT_PASSWORD: root
-      PORT: 8000
-      JWT_SECRET: jwt
-      SESSION_SECRET: "session"
+    env_file: .env
     depends_on:
       restro_db:
         condition: service_healthy
