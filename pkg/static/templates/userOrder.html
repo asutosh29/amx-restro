@@ -18,14 +18,13 @@
                     <p class="app-page-subtitle">Track your placed and in-progress orders.</p>
                 </div>
                 <div id="order-container" class="w-100 orders admin-orders-grid app-scroll-panel">
+                    {{ $anyOrdersExist := false }}
                     {{ range .UserOrders}}
-                        {{if or (eq (index . 0).Order_status "placed") (eq (index . 0).Order_status "cooking")}}
-                            {{ $pendingOrdersExist = true}}
-                            {{ template "UserOrderCard" .}}
-                        {{end}}
+                        {{ $anyOrdersExist = true}}
+                        {{ template "UserOrderCard" .}}
                     {{end}}
 
-                    {{ if not $pendingOrdersExist }}
+                    {{ if not $anyOrdersExist }}
                     <div class="app-empty-state app-panel-muted">
                         <h2 class="h4 mb-2">No active orders</h2>
                         <p class="mb-0">When you place an order, it will show up here.</p>
